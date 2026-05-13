@@ -88,9 +88,7 @@ class TempusDominus {
     this.optionsStore.viewDate.setLocalization(
       this.optionsStore.options.localization
     );
-    this.display._update(
-      this.optionsStore.currentView === 'clock' ? 'clock' : 'calendar'
-    );
+    this.display._update('calendar');
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -298,7 +296,9 @@ class TempusDominus {
       if (this.optionsStore.toggle) {
         let label = this.optionsStore.options.localization.toggleAriaLabel;
         if (this.dates.picked.length > 0) {
-          const picked = this.dates.picked.map((x) => x.format()).join(', ');
+          const picked = this.dates.picked
+            .map((x) => this.dates.formatInput(x))
+            .join(', ');
           label = `${label}, ${picked}`;
         }
 

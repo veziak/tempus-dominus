@@ -2,10 +2,6 @@ import DateDisplay from './calendar/date-display';
 import MonthDisplay from './calendar/month-display';
 import YearDisplay from './calendar/year-display';
 import DecadeDisplay from './calendar/decade-display';
-import TimeDisplay from './time/time-display';
-import HourDisplay from './time/hour-display';
-import MinuteDisplay from './time/minute-display';
-import SecondDisplay from './time/second-display';
 import { DateTime, Unit } from '../datetime';
 import Namespace from '../utilities/namespace';
 import { HideEvent } from '../utilities/event-types';
@@ -36,10 +32,6 @@ export default class Display {
   monthDisplay: MonthDisplay;
   yearDisplay: YearDisplay;
   decadeDisplay: DecadeDisplay;
-  timeDisplay: TimeDisplay;
-  hourDisplay: HourDisplay;
-  minuteDisplay: MinuteDisplay;
-  secondDisplay: SecondDisplay;
 
   constructor() {
     this.optionsStore = serviceLocator.locate(OptionsStore);
@@ -50,10 +42,6 @@ export default class Display {
     this.monthDisplay = serviceLocator.locate(MonthDisplay);
     this.yearDisplay = serviceLocator.locate(YearDisplay);
     this.decadeDisplay = serviceLocator.locate(DecadeDisplay);
-    this.timeDisplay = serviceLocator.locate(TimeDisplay);
-    this.hourDisplay = serviceLocator.locate(HourDisplay);
-    this.minuteDisplay = serviceLocator.locate(MinuteDisplay);
-    this.secondDisplay = serviceLocator.locate(SecondDisplay);
     this._eventEmitters = serviceLocator.locate(EventEmitters);
     this._widget = undefined;
 
@@ -74,10 +62,6 @@ export default class Display {
     return this.widget?.querySelector(`div.${Namespace.css.dateContainer}`);
   }
 
-  get timeContainer(): HTMLElement | undefined {
-    return this.widget?.querySelector(`div.${Namespace.css.timeContainer}`);
-  }
-
   /**
    * Returns this visible state of the picker (shown)
    */
@@ -94,15 +78,6 @@ export default class Display {
   _update(unit: ViewUpdateValues): void {
     if (!this.widget) return;
     switch (unit) {
-      case Unit.seconds:
-        this.secondDisplay._update(this.widget, this.paint);
-        break;
-      case Unit.minutes:
-        this.minuteDisplay._update(this.widget, this.paint);
-        break;
-      case Unit.hours:
-        this.hourDisplay._update(this.widget, this.paint);
-        break;
       case Unit.date:
         this.dateDisplay._update(this.widget, this.paint);
         break;
@@ -116,11 +91,6 @@ export default class Display {
         this.decadeDisplay._update(this.widget, this.paint);
         break;
       case 'clock':
-        if (!this._hasTime) break;
-        this.timeDisplay._update(this.widget);
-        this._update(Unit.hours);
-        this._update(Unit.minutes);
-        this._update(Unit.seconds);
         break;
       case 'calendar':
         this._update(Unit.date);
@@ -130,9 +100,6 @@ export default class Display {
         this._updateCalendarHeader();
         break;
       case 'all':
-        if (this._hasTime) {
-          this._update('clock');
-        }
         if (this._hasDate) {
           this._update('calendar');
         }
@@ -204,28 +171,11 @@ export default class Display {
         this.optionsStore.element.appendChild(this.widget);
       }
 
-      if (this.optionsStore.options.display.viewMode == 'clock') {
-        this._eventEmitters.action.emit({
-          e: null,
-          action: ActionTypes.showClock,
-        });
-      }
-
       this.widget
         .querySelectorAll('[data-action]')
         .forEach((element) =>
           element.addEventListener('click', this._actionsClickEvent)
         );
-
-      // show the clock when using sideBySide
-      if (this._hasTime && this.optionsStore.options.display.sideBySide) {
-        this.timeDisplay._update(this.widget);
-        (
-          this.widget.getElementsByClassName(
-            Namespace.css.clockContainer
-          )[0] as HTMLElement
-        ).style.display = 'grid';
-      }
     }
 
     this.widget.classList.add(Namespace.css.show);
@@ -242,31 +192,12 @@ export default class Display {
   }
 
   private _showSetupViewMode() {
-    // If modeView is only clock
-    const onlyClock = this._hasTime && !this._hasDate;
-
-    // reset the view to the clock if there's no date components
-    if (onlyClock) {
-      this.optionsStore.currentView = 'clock';
-      this._eventEmitters.action.emit({
-        e: null,
-        action: ActionTypes.showClock,
-      });
-    }
-    // otherwise return to the calendar view
-    else if (!this.optionsStore.currentCalendarViewMode) {
+    if (!this.optionsStore.currentCalendarViewMode) {
       this.optionsStore.currentCalendarViewMode =
         this.optionsStore.minimumCalendarViewMode;
     }
 
-    if (!onlyClock && this.optionsStore.options.display.viewMode !== 'clock') {
-      if (this._hasTime) {
-        if (!this.optionsStore.options.display.sideBySide) {
-          Collapse.hideImmediately(this.timeContainer);
-        } else {
-          Collapse.show(this.timeContainer);
-        }
-      }
+    if (this.dateContainer) {
       Collapse.show(this.dateContainer);
     }
 
@@ -296,11 +227,14 @@ export default class Display {
           tries++;
         }
       }
+      date.startOf(Unit.date);
       this.dates.setValue(date);
     }
 
     if (this.optionsStore.options.defaultDate) {
-      this.dates.setValue(this.optionsStore.options.defaultDate);
+      this.dates.setValue(
+        this.optionsStore.options.defaultDate.clone.startOf(Unit.date)
+      );
     }
   }
 
@@ -350,7 +284,7 @@ export default class Display {
 
     this.widget
       .querySelectorAll(
-        `.${Namespace.css.dateContainer} > div:not(.${Namespace.css.calendarHeader}), .${Namespace.css.timeContainer} > div:not(.${Namespace.css.clockContainer})`
+        `.${Namespace.css.dateContainer} > div:not(.${Namespace.css.calendarHeader})`
       )
       .forEach((e: HTMLElement) => (e.style.display = 'none'));
 
@@ -376,11 +310,6 @@ export default class Display {
     }
 
     picker.style.display = 'grid';
-
-    if (this.optionsStore.options.display.sideBySide)
-      (<HTMLElement>(
-        this.widget.querySelectorAll(`.${Namespace.css.clockContainer}`)[0]
-      )).style.display = 'grid';
 
     this._updateCalendarHeader();
     this._eventEmitters.viewUpdate.emit();
@@ -579,14 +508,6 @@ export default class Display {
       this.dateDisplay.getPicker()
     );
 
-    const timeView = document.createElement('div');
-    timeView.tabIndex = -1;
-    timeView.classList.add(Namespace.css.timeContainer);
-    timeView.appendChild(this.timeDisplay.getPicker(this._iconTag.bind(this)));
-    timeView.appendChild(this.hourDisplay.getPicker());
-    timeView.appendChild(this.minuteDisplay.getPicker());
-    timeView.appendChild(this.secondDisplay.getPicker());
-
     const toolbar = document.createElement('div');
     toolbar.tabIndex = -1;
     toolbar.classList.add(Namespace.css.toolbar);
@@ -598,11 +519,6 @@ export default class Display {
 
     if (this.optionsStore.options.display.calendarWeeks) {
       template.classList.add('calendarWeeks');
-    }
-
-    if (this.optionsStore.options.display.sideBySide && this._hasDateAndTime) {
-      this._buildWidgetSideBySide(template, dateView, timeView, toolbar);
-      return;
     }
 
     if (this.optionsStore.options.display.toolbarPlacement === 'top') {
@@ -623,19 +539,7 @@ export default class Display {
       template.appendChild(element);
     };
 
-    setupComponentView(
-      this._hasDate,
-      this._hasTime,
-      dateView,
-      this.optionsStore.options.display.viewMode !== 'clock'
-    );
-
-    setupComponentView(
-      this._hasTime,
-      this._hasDate,
-      timeView,
-      this.optionsStore.options.display.viewMode === 'clock'
-    );
+    setupComponentView(this._hasDate, false, dateView, true);
 
     if (this.optionsStore.options.display.toolbarPlacement === 'bottom') {
       template.appendChild(toolbar);
@@ -647,42 +551,14 @@ export default class Display {
     template.appendChild(arrow);
 
     this._widget = template;
-  }
-
-  private _buildWidgetSideBySide(
-    template: HTMLDivElement,
-    dateView: HTMLDivElement,
-    timeView: HTMLDivElement,
-    toolbar: HTMLDivElement
-  ) {
-    template.classList.add(Namespace.css.sideBySide);
-    if (this.optionsStore.options.display.toolbarPlacement === 'top') {
-      template.appendChild(toolbar);
-    }
-    const row = document.createElement('div');
-    row.classList.add('td-row');
-    dateView.classList.add('td-half');
-    timeView.classList.add('td-half');
-
-    row.appendChild(dateView);
-    row.appendChild(timeView);
-    template.appendChild(row);
-    if (this.optionsStore.options.display.toolbarPlacement === 'bottom') {
-      template.appendChild(toolbar);
-    }
-    this._widget = template;
+    return template;
   }
 
   /**
    * Returns true if the hours, minutes, or seconds component is turned on
    */
   get _hasTime(): boolean {
-    return (
-      this.optionsStore.options.display.components.clock &&
-      (this.optionsStore.options.display.components.hours ||
-        this.optionsStore.options.display.components.minutes ||
-        this.optionsStore.options.display.components.seconds)
-    );
+    return false;
   }
 
   /**
@@ -717,28 +593,6 @@ export default class Display {
       div.appendChild(
         this._iconTag(this.optionsStore.options.display.icons.today)
       );
-      toolbar.push(div);
-    }
-    if (
-      !this.optionsStore.options.display.sideBySide &&
-      this._hasDate &&
-      this._hasTime
-    ) {
-      let title, icon;
-      if (this.optionsStore.options.display.viewMode === 'clock') {
-        title = this.optionsStore.options.localization.selectDate;
-        icon = this.optionsStore.options.display.icons.date;
-      } else {
-        title = this.optionsStore.options.localization.selectTime;
-        icon = this.optionsStore.options.display.icons.time;
-      }
-
-      const div = document.createElement('div');
-      div.tabIndex = -1;
-      div.setAttribute('data-action', ActionTypes.togglePicker);
-      div.setAttribute('title', title);
-
-      div.appendChild(this._iconTag(icon));
       toolbar.push(div);
     }
     if (this.optionsStore.options.display.buttons.clear) {
@@ -867,9 +721,6 @@ export default class Display {
     if (!this._isVisible) this._dispose();
 
     switch (this.optionsStore.currentView) {
-      case 'clock':
-        this._update('clock');
-        break;
       case 'calendar':
         this._update(Unit.date);
         break;
@@ -886,10 +737,6 @@ export default class Display {
   }
 
   private _keyboardEvent(event: KeyboardEvent) {
-    if (this.optionsStore.currentView === 'clock') {
-      this._handleKeyDownClock(event);
-      return;
-    }
     this._handleKeyDownDate(event);
     return false;
   }
@@ -899,8 +746,6 @@ export default class Display {
     let dataValue = '';
 
     switch (this.optionsStore.currentView) {
-      case 'clock':
-        break;
       case 'calendar':
         selector = Namespace.css.daysContainer;
         dataValue = this.optionsStore.viewDate.dateToDataValue();
@@ -1074,95 +919,6 @@ export default class Display {
     event.preventDefault();
   }
 
-  private _handleKeyDownClock(event: KeyboardEvent) {
-    let flag = false;
-    const activeElement = document.activeElement as HTMLElement;
-
-    // Should find which of hour, minute, or seconds sub-windows is open
-    const visibleElement = this.widget.querySelector(
-      `.${Namespace.css.timeContainer} > div[style*="display: grid"]`
-    );
-
-    let subView = Namespace.css.clockContainer;
-
-    if (visibleElement.classList.contains(Namespace.css.hourContainer)) {
-      subView = Namespace.css.hourContainer;
-    }
-    if (visibleElement.classList.contains(Namespace.css.minuteContainer)) {
-      subView = Namespace.css.minuteContainer;
-    }
-    if (visibleElement.classList.contains(Namespace.css.secondContainer)) {
-      subView = Namespace.css.secondContainer;
-    }
-
-    switch (event.key) {
-      case 'Esc':
-      case 'Escape':
-        this._eventEmitters.action.emit({ e: null, action: ActionTypes.close });
-        break;
-
-      case ' ':
-      case 'Enter':
-        activeElement.click();
-
-        event.stopPropagation();
-        event.preventDefault();
-        return;
-
-      case 'Tab':
-        this._handleTab(activeElement, event);
-        return;
-    }
-
-    if (subView === Namespace.css.clockContainer) return;
-
-    const cells = [...visibleElement.querySelectorAll('div')];
-    const currentIndex = cells.indexOf(
-      document.activeElement as HTMLDivElement
-    );
-    const columnCount = 4;
-
-    let targetIndex: number;
-    switch (event.key) {
-      case 'Right':
-      case 'ArrowRight':
-        targetIndex = currentIndex < cells.length - 1 ? currentIndex + 1 : null;
-        flag = true;
-        break;
-
-      case 'Left':
-      case 'ArrowLeft':
-        flag = true;
-        targetIndex = currentIndex > 0 ? currentIndex - 1 : null;
-        break;
-
-      case 'Down':
-      case 'ArrowDown':
-        targetIndex =
-          currentIndex + columnCount < cells.length
-            ? currentIndex + columnCount
-            : null;
-        flag = true;
-        break;
-
-      case 'Up':
-      case 'ArrowUp':
-        targetIndex =
-          currentIndex - columnCount >= 0 ? currentIndex - columnCount : null;
-        flag = true;
-        break;
-    }
-
-    if (!flag) return;
-
-    if (targetIndex !== undefined && targetIndex !== null) {
-      cells[targetIndex].focus();
-    }
-
-    event.stopPropagation();
-    event.preventDefault();
-  }
-
   private _handleTab(activeElement: HTMLElement, event: KeyboardEvent) {
     const shiftKey = event.shiftKey;
     // gather tab targets
@@ -1174,30 +930,7 @@ export default class Display {
     };
 
     const tabTargets: HTMLElement[] = [];
-    console.log(this.optionsStore.currentView);
     switch (this.optionsStore.currentView) {
-      case 'clock':
-        {
-          tabTargets.push(
-            ...(this.widget.querySelectorAll(
-              `.${Namespace.css.timeContainer} > div[style*="display: grid"] > div[data-action]`
-            ) as NodeListOf<HTMLElement>)
-          );
-
-          const clock = this.widget.querySelectorAll(
-            `.${Namespace.css.clockContainer}`
-          )[0] as HTMLElement;
-
-          // add meridiem if it's in view
-          if (clock?.style.display === 'grid') {
-            tabTargets.push(
-              ...(this.widget.querySelectorAll(
-                `.${Namespace.css.toggleMeridiem}`
-              ) as NodeListOf<HTMLElement>)
-            );
-          }
-        }
-        break;
       case 'calendar':
       case 'months':
       case 'years':
@@ -1233,16 +966,7 @@ export default class Display {
   }
 
   private _handleFocus() {
-    if (this.optionsStore.currentView === 'clock') this._handleFocusClock();
-    else this.findViewDateElement().focus();
-  }
-
-  private _handleFocusClock() {
-    (
-      this.widget.querySelector(
-        `.${Namespace.css.timeContainer} > div[style*="display: grid"]`
-      ).children[0] as HTMLElement
-    ).focus();
+    this.findViewDateElement()?.focus();
   }
 }
 

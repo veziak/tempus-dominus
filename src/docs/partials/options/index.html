@@ -124,6 +124,13 @@
 })</code>
 </pre>
 
+  <div class='alert alert-info'>
+    <p class='mb-0'>
+      The picker widget is calendar-only: it does not render the clock or hour/minute/second grids. Options such as
+      <code>display.components.clock</code> remain in the defaults for compatibility but do not add time UI.
+    </p>
+  </div>
+
   <div class='row'>
     <h2 id='dateRange'>dateRange <small>(as of 6.4.1)</small> <a class='anchor-link' aria-label='Anchor' href='#dateRange'><i
       class='fa-solid fa-anchor' aria-hidden='true'></i></a>
@@ -224,8 +231,8 @@
     </h2>
     <p>
       <strong>Accepts:</strong> string <strong>Defaults:</strong> <code>;</code><br />
-      When <code>multipleDates</code> is enabled, this value wil be used to separate the selected dates. E.g. <code>08/29/2021,
-      12:00 AM; 08/30/2021, 12:00 AM; 08/23/2021, 12:00 AM</code>
+      When <code>multipleDates</code> is enabled, this value wil be used to separate the selected dates. E.g. <code>08/29/2021;
+      08/30/2021; 08/23/2021</code>
     </p>
   </div>
 
@@ -236,8 +243,8 @@
     </h2>
     <p>
       <strong>Accepts</strong> true|false <strong>Defaults:</strong> false<br />
-      If enabled and any of the time components are enabled, when a user selects a date the picker will automatically
-      display the clock view after <code>promptTimeOnDateChangeTransitionDelay</code>.
+      This option is retained for compatibility. The picker no longer includes a clock view, so changing it has no
+      effect on the UI.
     </p>
   </div>
 
@@ -249,9 +256,7 @@
     </h2>
     <p>
       <strong>Accepts</strong> number <strong>Defaults:</strong> 200<br />
-      Used with <code>promptTimeOnDateChange</code>. The number of milliseconds before the picker will display the
-      clock
-      view.
+      Retained for compatibility with <code>promptTimeOnDateChange</code>. The clock view is not shown.
     </p>
   </div>
 

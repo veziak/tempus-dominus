@@ -14,10 +14,5 @@ export class FixtureDisplay {
     return iconSpan;
   }
 
-  _hasTime = true;
   _hasDate = true;
-
-  get _hasDateAndTime(): boolean {
-    return this._hasDate && this._hasTime;
-  }
 }

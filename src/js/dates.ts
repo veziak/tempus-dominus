@@ -1,4 +1,5 @@
 import { DateTime, getFormatByUnit, Unit } from './datetime';
+import type { FormatLocalization } from './utilities/options';
 import Namespace from './utilities/namespace';
 import {
   ChangeEvent,
@@ -10,6 +11,25 @@ import { serviceLocator } from './utilities/service-locator';
 import { EventEmitters } from './utilities/event-emitter';
 import { OptionsStore } from './utilities/optionsStore';
 import { OptionConverter } from './utilities/optionConverter';
+
+/**
+ * Format string used in the text input: date tokens only (no LT / LTS tail).
+ */
+function localizationForInputField(
+  loc: FormatLocalization
+): FormatLocalization {
+  const raw = (loc.format || 'L').trim();
+  let format = raw;
+  if (raw === 'LLL' || raw === 'LLLL') {
+    format = 'LL';
+  } else {
+    const parts = raw.split(/\s+/);
+    if (parts.length >= 2 && /^(LT|LTS)$/i.test(parts[parts.length - 1])) {
+      format = parts.slice(0, -1).join(' ') || 'L';
+    }
+  }
+  return { ...loc, format };
+}
 
 export default class Dates {
   private _dates: DateTime[] = [];
@@ -51,8 +71,10 @@ export default class Dates {
    */
   formatInput(date: DateTime): string {
     if (!date) return '';
-    date.localization = this.optionsStore.options.localization;
-    return date.format();
+    const loc = localizationForInputField(
+      this.optionsStore.options.localization
+    );
+    return date.clone.setLocalization(loc).format();
   }
 
   /**
@@ -61,12 +83,17 @@ export default class Dates {
    */
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   parseInput(value: any): DateTime {
+    const loc = this.optionsStore.options.localization;
+    const locInput = localizationForInputField(loc);
     try {
-      return OptionConverter.dateConversion(
-        value,
-        'input',
-        this.optionsStore.options.localization
-      );
+      if (typeof value === 'string' && value.trim() !== '') {
+        try {
+          return OptionConverter.dateConversion(value, 'input', loc);
+        } catch {
+          return OptionConverter.dateConversion(value, 'input', locInput);
+        }
+      }
+      return OptionConverter.dateConversion(value, 'input', loc);
     } catch (e) {
       this._eventEmitters.triggerEvent.emit({
         type: Namespace.events.error,

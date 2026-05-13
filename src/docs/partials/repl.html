@@ -19,7 +19,7 @@
      * @property {string} htmlNote - If this is true, then look at the JS snapshot and only update the config.
      */
 
-    const sdk = StackBlitzSDK;
+    const sdk = window.StackBlitzSDK;
     const targetJs = 'example.js';
     const targetHtml = 'index.html';
     let replData = {};
@@ -31,13 +31,20 @@
       originalHtml = undefined;
 
       prettify(code, parser) {
-        return prettier.format(code, {
-          parser: parser,
-          plugins: prettierPlugins,
-          singleQuote: true,
-          tabWidth: 2,
-          htmlWhitespaceSensitivity: 'ignore'
-        });
+        const plugins =
+          typeof prettierPlugins !== 'undefined' ? prettierPlugins : [];
+        try {
+          return prettier.format(code, {
+            parser: parser,
+            plugins,
+            singleQuote: true,
+            tabWidth: 2,
+            htmlWhitespaceSensitivity: 'ignore'
+          });
+        } catch (e) {
+          console.warn('REPL prettify failed', e);
+          return code;
+        }
       }
 
       /**
@@ -54,7 +61,8 @@
         if (!value) return { js: '', html: '', jsConfigOnly: false, htmlNote: '' };
 
         try {
-          return JSON.parse(lzString.decompressFromURL(value));
+          const raw = lzString.decompressFromURL(value);
+          return raw ? JSON.parse(raw) : { js: '', html: '', jsConfigOnly: false, htmlNote: '' };
         } catch {
           return { js: '', html: '', jsConfigOnly: false, htmlNote: '' };
         }
@@ -71,15 +79,28 @@
         this.snapshot = await this.vm.getFsSnapshot();
         this.originalJs = this.snapshot[targetJs];
         this.originalHtml = this.htmlToElement(this.snapshot[targetHtml]);
+        if (!this.originalHtml) {
+          throw new Error('REPL: could not parse StackBlitz index.html');
+        }
 
         await this.updateVmAsync();
       }
 
       async updateVmAsync(code = '') {
-        if (!code) code = this.getQueryCode();
-        else code = JSON.parse(lzString.decompressFromURL(code));
+        if (!code) {
+          code = this.getQueryCode();
+        } else {
+          try {
+            const raw = lzString.decompressFromURL(code);
+            code = raw ? JSON.parse(raw) : null;
+          } catch (e) {
+            console.warn('REPL: invalid code hash', e);
+            code = null;
+          }
+        }
 
-        if (!code.js && !code.html) return;
+        if (!code || typeof code !== 'object') return;
+        if (!code.js && !code.html && !code.htmlNote) return;
 
         const delta = {
           create: {},
@@ -93,8 +114,10 @@
         }
         if (code.html || code.htmlNote) {
           const newHtml = this.originalHtml.cloneNode(true);
-          if (code.html) newHtml.querySelector('#htmlTarget').innerHTML = code.html;
-          newHtml.querySelector('#noteTarget').innerHTML = code.htmlNote;
+          const htmlTarget = newHtml.querySelector('#htmlTarget');
+          const noteTarget = newHtml.querySelector('#noteTarget');
+          if (code.html && htmlTarget) htmlTarget.innerHTML = code.html;
+          if (code.htmlNote != null && noteTarget) noteTarget.innerHTML = code.htmlNote;
           delta.create[targetHtml] = this.prettify(newHtml.outerHTML, 'html');
         }
 
@@ -119,15 +142,19 @@
 
     const updateRepl = (name) => {
       const hash = replData[name];
+      if (!hash) {
+        console.warn('REPL: unknown example', name);
+        return;
+      }
 
       const url = new URL(window.location);
       url.hash = `#code/${hash}`;
       window.history.pushState({}, '', url);
-      repl.updateVmAsync(hash).then();
+      repl.updateVmAsync(hash).catch((e) => console.error('REPL update failed', e));
     };
 
     const resetRepl = () => {
-      repl.resetVmAsync().then();
+      repl.resetVmAsync().catch((e) => console.error('REPL reset failed', e));
 
       const url = new URL(window.location);
       url.hash = ``;
@@ -135,23 +162,67 @@
     };
 
     document.addEventListener('DOMContentLoaded', async () => {
-      replData = await (await fetch('/6/repl-data.json')).json();
+      const embedEl = document.getElementById('embed');
+      const showEmbedError = (message) => {
+        if (embedEl) {
+          embedEl.innerHTML = `<div class="alert alert-danger m-3" role="alert">${message}</div>`;
+        }
+      };
 
-      repl.vm = await sdk
-        .embedProjectId('embed', repl.projectId, {
+      try {
+        const res = await fetch('/6/repl-data.json');
+        if (!res.ok) {
+          throw new Error(`repl-data.json HTTP ${res.status}`);
+        }
+        const payload = await res.json();
+        delete payload.note;
+        replData = payload;
+      } catch (e) {
+        console.error(e);
+        showEmbedError(
+          'Could not load <code>/6/repl-data.json</code>. Run <code>npm run docs</code> so the file is copied into the docs output, then open the site from that build (not only the partial HTML).'
+        );
+        return;
+      }
+
+      if (!sdk || typeof sdk.embedProjectId !== 'function') {
+        showEmbedError('StackBlitz SDK failed to load. Check the network or script blockers.');
+        return;
+      }
+
+      try {
+        repl.vm = await sdk.embedProjectId('embed', repl.projectId, {
           openFile: `${targetHtml},${targetJs}`,
           hideNavigation: true,
           settings: {
             compile: { action: 'refresh' }
           }
         });
+      } catch (e) {
+        console.error(e);
+        showEmbedError(
+          'Could not embed the StackBlitz project. The project id may be unavailable or blocked by your browser.'
+        );
+        return;
+      }
+
       setTimeout(async () => {
-        await repl.ready();
+        try {
+          await repl.ready();
+        } catch (e) {
+          console.error('REPL ready() failed', e);
+          showEmbedError(
+            'StackBlitz loaded but initializing the editor failed. See the browser console for details.'
+          );
+        }
       }, 2000);
 
       const mainToc = document.getElementById('mainToc');
-      mainToc.innerHTML = document.getElementById('replToc').innerHTML;
-      mainToc.style.display = 'block';
+      const replToc = document.getElementById('replToc');
+      if (mainToc && replToc) {
+        mainToc.innerHTML = replToc.innerHTML;
+        mainToc.style.display = 'block';
+      }
     });
   </script>
   <style>
@@ -196,15 +267,8 @@
         </li>
 
         <li><a
-          href='javascript:updateRepl("sideBySide")'
-          class='d-inline-flex align-items-center rounded' aria-current='page'>Side By Side</a></li>
-
-        <li><a
           href='javascript:updateRepl("localization")'
           class='d-inline-flex align-items-center rounded' aria-current='page'>Localization</a></li>
-
-        <li><a href='javascript:updateRepl("timeOnly")'
-               class='d-inline-flex align-items-center rounded' aria-current='page'>Time Only</a></li>
 
         <li><a href='javascript:updateRepl("inputOnly")'
                class='d-inline-flex align-items-center rounded' aria-current='page'>Input Only</a></li>

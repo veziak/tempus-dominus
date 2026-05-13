@@ -2,7 +2,7 @@ import {
   loadFixtures,
   newDate,
   newDateMinute,
-  newDateStringMinute,
+  newDateStringDate,
   reset,
   secondaryDate,
   store,
@@ -91,7 +91,7 @@ test('lastPicked to return last selected date', () => {
 test('formatInput', () => {
   expect(dates.formatInput(undefined)).toBe('');
 
-  expect(dates.formatInput(newDate())).toBe(newDateStringMinute);
+  expect(dates.formatInput(newDate())).toBe(newDateStringDate);
 });
 
 test('parseInput', () => {
@@ -105,7 +105,7 @@ test('parseInput', () => {
   expect(dateConversionSpy).toHaveBeenCalledTimes(1);
 
   dateConversionSpy.mockImplementationOnce(() => newDateMinute());
-  expect(dates.parseInput(newDateStringMinute).toISOString()).toBe(
+  expect(dates.parseInput(newDateStringDate).toISOString()).toBe(
     newDateMinute().toISOString()
   );
   expect(dateConversionSpy).toHaveBeenCalledTimes(2);
@@ -126,7 +126,7 @@ test('setFromInput', () => {
   //test setting date from string
   setValueSpy.mockImplementationOnce(() => dates.add(newDateMinute()));
   parseInputSpy.mockImplementationOnce(() => newDateMinute());
-  dates.setFromInput(newDateStringMinute);
+  dates.setFromInput(newDateStringDate);
   expect(dates.picked).toEqual([newDateMinute()]);
   expect(parseInputSpy).toHaveBeenCalledTimes(1);
   expect(setValueSpy).toHaveBeenCalledTimes(2);
@@ -214,11 +214,11 @@ test('updateInput', () => {
   dates.updateInput(undefined);
 
   store.input = document.createElement('input');
-  formatInputSpy.mockImplementation(() => newDateStringMinute);
+  formatInputSpy.mockImplementation(() => newDateStringDate);
 
   //test input
   dates.updateInput(newDate());
-  expect(store.input.value).toBe('03/14/2023 1:25 PM');
+  expect(store.input.value).toBe('03/14/2023');
   expect(formatInputSpy).toHaveBeenCalled();
 
   //test multipleDates
@@ -227,7 +227,7 @@ test('updateInput', () => {
   dates.add(newDate());
 
   dates.updateInput();
-  expect(store.input.value).toBe('03/14/2023 1:25 PM; 03/14/2023 1:25 PM');
+  expect(store.input.value).toBe('03/14/2023; 03/14/2023');
   expect(formatInputSpy).toHaveBeenCalled();
 });
 

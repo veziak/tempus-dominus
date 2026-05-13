@@ -1,7 +1,7 @@
+import { expect, vi } from 'vitest';
 import { DateTime, Unit } from '../src/js/datetime';
 import { OptionsStore } from '../src/js/utilities/optionsStore';
 import DefaultFormatLocalization from '../src/js/utilities/default-format-localization';
-import { vi } from 'vitest';
 import {
   FixtureServiceLocator,
   MockLoad,
@@ -31,6 +31,9 @@ const vanillaDate = () => new Date(2023, 3 - 1, 14, 13, 25, 42, 500);
 const secondaryDate = () => new DateTime(2023, 7 - 1, 8, 3, 0);
 
 const newDateMinute = () => newDate().startOf(Unit.minutes);
+/** String for default localization format (date-only). */
+const newDateStringDate = newDateMinute().format('L');
+/** String when explicitly formatting with time token. */
 const newDateStringMinute = newDateMinute().format('L LT');
 const newDateStringIso = newDate().toISOString();
 
@@ -40,6 +43,14 @@ const reset = () => {
   (store as unknown as FixtureOptionsStore).reset();
   store.viewDate = newDate();
 };
+
+/** Calendar selections and default input values use local midnight (no time-of-day). */
+function expectDateTimeMidnightLocal(d: DateTime) {
+  expect(d.hours).toBe(0);
+  expect(d.minutes).toBe(0);
+  expect(d.seconds).toBe(0);
+  expect(d.getMilliseconds()).toBe(0);
+}
 
 const loadFixtures = (load: MockLoad) => {
   fixtureServiceLocator.loadEach(load);
@@ -58,6 +69,7 @@ reset();
 export {
   newDate,
   newDateMinute,
+  newDateStringDate,
   newDateStringMinute,
   newDateStringIso,
   vanillaDate,
@@ -67,4 +79,5 @@ export {
   defaultLocalization,
   loadFixtures,
   createElementWithClasses,
+  expectDateTimeMidnightLocal,
 };

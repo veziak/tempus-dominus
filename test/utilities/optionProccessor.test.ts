@@ -78,6 +78,7 @@ test('defaultProcessor', () => {
 });
 
 test('mandatoryDate', () => {
+  const locTime = { ...defaultLocalization(), format: 'L LT' };
   //invalid date should throw
   expect(() =>
     processKey({
@@ -94,16 +95,17 @@ test('mandatoryDate', () => {
   expect(
     processKey({
       key: 'defaultDate',
-      value: newDateMinute().format(),
+      value: newDateMinute().format('L LT'),
       defaultType: '',
       providedType: '',
       path: '',
-      localization: defaultLocalization(),
+      localization: locTime,
     })
   ).toEqual(newDateMinute());
 });
 
 test('optionalDate', () => {
+  const locTime = { ...defaultLocalization(), format: 'L LT' };
   //invalid date should throw
   expect(() =>
     processKey({
@@ -120,11 +122,11 @@ test('optionalDate', () => {
   expect(
     processKey({
       key: 'minDate',
-      value: newDateMinute().format(),
+      value: newDateMinute().format('L LT'),
       defaultType: '',
       providedType: '',
       path: '',
-      localization: defaultLocalization(),
+      localization: locTime,
     })
   ).toEqual(newDateMinute());
 

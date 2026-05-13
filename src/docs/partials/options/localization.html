@@ -454,7 +454,8 @@
                                         href='#dateFormatsLLL'><i
             class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
           <p>
-            Long form date/time format. US default is July 4, 2022 9:30 AM.
+            Long form pattern; expands per <code>dateFormats.LLL</code> (that preset still includes time segments for
+            <code>DateTime.format()</code>). The picker input shows a date-only string by default.
           </p>
         </div>
         <div>
@@ -462,7 +463,8 @@
                                           href='#dateFormatsLLLL'><i
             class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
           <p>
-            Long form date/time format with weekday. US default is Monday, July 4, 2022 9:30 AM.
+            Long form pattern with weekday; expands per <code>dateFormats.LLLL</code> (includes time segments for
+            <code>DateTime.format()</code>). The picker input shows a date-only string by default.
           </p>
         </div>
       </div>
@@ -485,7 +487,10 @@
       class='fa-solid fa-anchor' aria-hidden='true'></i></a>
     </h2>
     <p>
-      Default tokenized format to use. This can be "L" or "dd/MM/yyyy".
+      Default tokenized format to use for parsing and for <code>DateTime.format()</code> when you call it yourself.
+      This can be <code>"L"</code> or <code>"dd/MM/yyyy"</code>, for example. The text input is formatted with a
+      date-only pattern (time tokens such as a trailing <code>LT</code> are not shown there), unless a plugin replaces
+      <code>formatInput</code>.
     </p>
   </div>
 

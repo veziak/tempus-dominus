@@ -21,7 +21,7 @@
               type='text'
               class='form-control'
               data-td-target='#datetimepicker1'
-              value='16.02.2022, 12:49 AM'
+              value='16.02.2022'
             />
             <span
               class='input-group-text'
@@ -39,14 +39,14 @@
             crossorigin='anonymous' referrerpolicy='no-referrer'></script>
     <script src='/6/js/plugins/moment-parse.js'></script>
     <script type='text/javascript'>
-      tempusDominus.extend(tempusDominus.plugins.moment_parse, 'DD.MM.yyyy hh:mm a');
+      tempusDominus.extend(tempusDominus.plugins.moment_parse, 'DD.MM.yyyy');
       const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));
     </script>
   </div>
   <pre>
 <code class='language-js'>//example picker
 //note that you can optionally provide the format to use.
-tempusDominus.extend(tempusDominus.plugins.moment_parse, 'DD.MM.yyyy hh:mm a');
+tempusDominus.extend(tempusDominus.plugins.moment_parse, 'DD.MM.yyyy');
 const datetimepicker1 = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'));</code>
 </pre>
 </div>

@@ -2,6 +2,7 @@
 import {
   defaultLocalization,
   newDate,
+  newDateStringDate,
   newDateStringMinute,
 } from './test-utilities';
 import { expect, test } from 'vitest';
@@ -621,7 +622,7 @@ test('format', () => {
 
   dateTime.localization.hourCycle = 'h11';
 
-  expect(dateTime.format()).toBe(newDateStringMinute);
+  expect(dateTime.format()).toBe(newDateStringDate);
 
   expect(dateTime.format('L LT')).toBe(newDateStringMinute);
 

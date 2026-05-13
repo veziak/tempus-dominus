@@ -175,6 +175,9 @@ class Build {
   }
 
   copyDirectory(source, destination) {
+    if (!fs.existsSync(source)) {
+      return;
+    }
     fs.mkdirSync(destination, { recursive: true });
 
     fs.readdirSync(source, { withFileTypes: true }).forEach((entry) => {
@@ -498,7 +501,15 @@ ${this.siteMap}
   }
 
   updateDist() {
-    this.copyDirectory(path.join('.', 'dist', 'js'), path.join('.', siteConfig.output, 'js'));
+    const distJs = path.join('.', 'dist', 'js');
+    if (!fs.existsSync(distJs)) {
+      console.error(
+        '[Make] Missing `dist/js`. The docs site copies built library files from `dist/`.\n' +
+          '        Run `npm run build` first, then run `npm run docs` again.'
+      );
+      process.exit(1);
+    }
+    this.copyDirectory(distJs, path.join('.', siteConfig.output, 'js'));
     this.copyDirectory(path.join('.', 'dist', 'css'), path.join('.', siteConfig.output, 'css'));
     this.copyDirectory(path.join('.', 'dist', 'plugins'), path.join('.', siteConfig.output, 'js', 'plugins'));
     this.copyDirectory(path.join('.', 'dist', 'locales'), path.join('.', siteConfig.output, 'js', 'locales'));

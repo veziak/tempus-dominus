@@ -21,6 +21,8 @@ test('tryConvertToDateTime', () => {
   const fromStringSpy = vi.spyOn(DateTime, 'fromString');
   fromStringSpy.mockImplementationOnce(() => newDateMinute());
 
+  const locTime = { ...defaultLocalization(), format: 'L LT' };
+
   //null should return null
   expect(tryConvertToDateTime(null, null)).toBe(null);
 
@@ -32,16 +34,14 @@ test('tryConvertToDateTime', () => {
   expect(convertSpy).toHaveBeenCalled();
 
   //converting from string
-  expect(
-    tryConvertToDateTime('03/14/2023 1:25 PM', defaultLocalization())
-  ).toEqual(newDateMinute());
+  expect(tryConvertToDateTime('03/14/2023 1:25 PM', locTime)).toEqual(
+    newDateMinute()
+  );
   expect(fromStringSpy).toHaveBeenCalled();
 
   // converting from an invalid string will produce an invalid date
   fromStringSpy.mockImplementationOnce((a) => new DateTime(a));
-  expect(
-    tryConvertToDateTime('13/70/2023 1:25 PM', defaultLocalization())
-  ).toBe(null);
+  expect(tryConvertToDateTime('13/70/2023 1:25 PM', locTime)).toBe(null);
   expect(fromStringSpy).toHaveBeenCalled();
 
   // an invalid type should return null
@@ -58,13 +58,14 @@ test('convertToDateTime', () => {
 });
 
 test('typeCheckDateArray', () => {
+  const locTime = { ...defaultLocalization(), format: 'L LT' };
   //wrong data type
   expect(() => typeCheckDateArray('disabledDates', 42, '', null)).toThrow();
 
   //check each excepted type for conversion
-  const dateArray = [newDate(), vanillaDate(), secondaryDate().format()];
+  const dateArray = [newDate(), vanillaDate(), secondaryDate().format('L LT')];
 
-  typeCheckDateArray('disabledDates', dateArray, null);
+  typeCheckDateArray('disabledDates', dateArray, '', locTime);
 
   expect(dateArray[0]).toEqual(newDate());
   expect(dateArray[1]).toEqual(vanillaDate());

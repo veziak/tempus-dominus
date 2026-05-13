@@ -9,7 +9,7 @@ const DefaultFormatLocalization: FormatLocalization = {
     LLL: 'MMMM d, yyyy h:mm T',
     LLLL: 'dddd, MMMM d, yyyy h:mm T',
   },
-  format: 'L LT',
+  format: 'L',
   locale: 'default',
   hourCycle: undefined,
   ordinal: (n) => {

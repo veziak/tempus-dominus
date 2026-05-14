@@ -10,6 +10,10 @@ Tempus Dominus is a powerful and robust date time picker for javascript. Version
 
 # Developers
 
+## Architecture
+
+For a maintainer-oriented overview of modules, the service locator, events, and data flow, see [docs/readme.md](docs/readme.md).
+
 ## Building
 
 Run `npm i` to install needed packages.

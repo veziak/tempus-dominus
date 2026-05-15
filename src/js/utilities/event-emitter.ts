@@ -2,7 +2,7 @@ import { DateTime, Unit } from '../datetime';
 import ActionTypes from './action-types';
 import { BaseEvent } from './event-types';
 
-export type ViewUpdateValues = Unit | 'decade' | 'clock' | 'calendar' | 'all';
+export type ViewUpdateValues = Unit | 'decade' | 'calendar' | 'all';
 
 class EventEmitter<T> {
   private subscribers: ((value?: T) => void)[] = [];

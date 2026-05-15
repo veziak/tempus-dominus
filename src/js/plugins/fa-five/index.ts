@@ -2,7 +2,6 @@
 
 const faFiveIcons = {
   type: 'icons',
-  time: 'fas fa-clock',
   date: 'fas fa-calendar',
   up: 'fas fa-arrow-up',
   down: 'fas fa-arrow-down',

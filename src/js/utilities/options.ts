@@ -16,11 +16,6 @@ export default interface Options {
       month?: boolean;
       year?: boolean;
       decades?: boolean;
-      clock?: boolean;
-      hours?: boolean;
-      minutes?: boolean;
-      seconds?: boolean;
-      useTwentyfourHour?: boolean;
     };
     buttons?: { today?: boolean; close?: boolean; clear?: boolean };
     calendarWeeks?: boolean;
@@ -55,8 +50,6 @@ export default interface Options {
     maxDate?: DateTime;
     enabledDates?: DateTime[];
     disabledDates?: DateTime[];
-    enabledHours?: number[];
-    disabledHours?: number[];
     disabledTimeIntervals?: { from: DateTime; to: DateTime }[];
     daysOfWeekDisabled?: number[];
   };

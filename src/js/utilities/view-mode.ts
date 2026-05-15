@@ -1,5 +1,4 @@
 type ViewMode = {
-  clock;
   calendar;
   months;
   years;

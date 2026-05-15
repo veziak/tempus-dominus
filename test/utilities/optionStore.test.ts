@@ -20,8 +20,6 @@ test('currentCalendarViewMode', () => {
   expect(optionStore.currentView).toBe('months');
 
   //set the view to the clock and then simulate it back to the calendar
-  optionStore.currentView = 'clock';
-  expect(optionStore.currentView).toBe('clock');
   optionStore.refreshCurrentView();
   expect(optionStore.currentView).toBe('months');
 });

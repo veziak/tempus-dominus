@@ -199,41 +199,6 @@ class Css {
   separator = 'separator';
 
   /**
-   * The outer element for the clock view.
-   */
-  clockContainer = `${this.timeContainer}-clock`;
-
-  /**
-   * The outer element for the hours selection view.
-   */
-  hourContainer = `${this.timeContainer}-hour`;
-
-  /**
-   * The outer element for the minutes selection view.
-   */
-  minuteContainer = `${this.timeContainer}-minute`;
-
-  /**
-   * The outer element for the seconds selection view.
-   */
-  secondContainer = `${this.timeContainer}-second`;
-
-  /**
-   * Applied to each element in the hours selection view.
-   */
-  hour = 'hour';
-
-  /**
-   * Applied to each element in the minutes selection view.
-   */
-  minute = 'minute';
-
-  /**
-   * Applied to each element in the seconds selection view.
-   */
-  second = 'second';
-
-  /**
    * Applied AM/PM toggle button.
    */
   toggleMeridiem = 'toggleMeridiem';

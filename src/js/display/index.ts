@@ -90,8 +90,6 @@ export default class Display {
       case 'decade':
         this.decadeDisplay._update(this.widget, this.paint);
         break;
-      case 'clock':
-        break;
       case 'calendar':
         this._update(Unit.date);
         this._update(Unit.year);

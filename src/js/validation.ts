@@ -32,24 +32,7 @@ export default class Validation {
     )
       return false;
 
-    if (!this._minMaxIsValid(granularity, targetDate)) return false;
-
-    if (
-      granularity === Unit.hours ||
-      granularity === Unit.minutes ||
-      granularity === Unit.seconds
-    ) {
-      if (!this._enabledDisabledHoursIsValid(targetDate)) return false;
-
-      if (
-        this.optionsStore.options.restrictions.disabledTimeIntervals?.filter(
-          (internal) => targetDate.isBetween(internal.from, internal.to)
-        ).length !== 0
-      )
-        return false;
-    }
-
-    return true;
+    return this._minMaxIsValid(granularity, targetDate);
   }
 
   private _enabledDisabledDatesIsValid(
@@ -135,63 +118,6 @@ export default class Validation {
     }
 
     return true;
-  }
-
-  private _enabledDisabledHoursIsValid(targetDate: DateTime) {
-    if (
-      this.optionsStore.options.restrictions.disabledHours.length > 0 &&
-      this._isInDisabledHours(targetDate)
-    ) {
-      return false;
-    }
-
-    // noinspection RedundantIfStatementJS
-    if (
-      this.optionsStore.options.restrictions.enabledHours.length > 0 &&
-      !this._isInEnabledHours(targetDate)
-    ) {
-      return false;
-    }
-
-    return true;
-  }
-
-  /**
-   * Checks to see if the disabledHours option is in use and returns true (meaning invalid)
-   * if the `testDate` is with in the array. Granularity is by hours.
-   * @param testDate
-   * @private
-   */
-  private _isInDisabledHours(testDate: DateTime) {
-    if (
-      !this.optionsStore.options.restrictions.disabledHours ||
-      this.optionsStore.options.restrictions.disabledHours.length === 0
-    )
-      return false;
-
-    const formattedDate = testDate.hours;
-    return this.optionsStore.options.restrictions.disabledHours.includes(
-      formattedDate
-    );
-  }
-
-  /**
-   * Checks to see if the enabledHours option is in use and returns true (meaning valid)
-   * if the `testDate` is with in the array. Granularity is by hours.
-   * @param testDate
-   * @private
-   */
-  private _isInEnabledHours(testDate: DateTime) {
-    if (
-      !this.optionsStore.options.restrictions.enabledHours ||
-      this.optionsStore.options.restrictions.enabledHours.length === 0
-    )
-      return true;
-
-    const formattedDate = testDate.hours;
-    return this.optionsStore.options.restrictions.enabledHours.includes(
-      formattedDate
-    );
   }
 
   dateRangeIsValid(dates: DateTime[], index: number, target: DateTime) {

@@ -417,17 +417,6 @@ class TempusDominus {
       this.display._update('all');
     }
 
-    if (
-      newConfig.display.components.useTwentyfourHour &&
-      newConfig.localization.hourCycle === undefined
-    )
-      newConfig.localization.hourCycle = 'h24';
-    else if (newConfig.localization.hourCycle === undefined) {
-      newConfig.localization.hourCycle = guessHourCycle(
-        newConfig.localization.locale
-      );
-    }
-
     this.optionsStore.options = newConfig;
 
     if (

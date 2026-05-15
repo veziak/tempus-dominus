@@ -86,8 +86,10 @@ export default class DateDisplay {
 
     const innerDate = this.optionsStore.viewDate.clone
       .startOf(Unit.month)
-      .startOf('weekDay', this.optionsStore.options.localization.startOfTheWeek)
-      .manipulate(12, Unit.hours);
+      .startOf(
+        'weekDay',
+        this.optionsStore.options.localization.startOfTheWeek
+      );
 
     this._handleCalendarWeeks(container, innerDate.clone);
 

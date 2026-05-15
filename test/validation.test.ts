@@ -24,7 +24,7 @@ test('isValid', () => {
   //no rules
   expect(validation.isValid(targetDate, Unit.month)).toBe(true);
   expect(validation.isValid(targetDate, Unit.date)).toBe(true);
-  expect(validation.isValid(targetDate, Unit.hours)).toBe(true);
+  expect(validation.isValid(targetDate, Unit.year)).toBe(true);
 
   //enabled date
   store.options.restrictions.enabledDates = [targetDate];
@@ -40,18 +40,6 @@ test('isValid', () => {
   store.options.restrictions.daysOfWeekDisabled = [targetDate.weekDay];
   expect(validation.isValid(targetDate, Unit.date)).toBe(false);
   store.options.restrictions.daysOfWeekDisabled = [];
-
-  store.options.restrictions.disabledHours = [targetDate.hours];
-  expect(validation.isValid(targetDate, Unit.hours)).toBe(false);
-  store.options.restrictions.disabledHours = [];
-
-  store.options.restrictions.disabledTimeIntervals = [
-    {
-      from: targetDate.clone.manipulate(-2, Unit.hours),
-      to: targetDate.clone.manipulate(2, Unit.hours),
-    },
-  ];
-  expect(validation.isValid(targetDate, Unit.hours)).toBe(false);
 });
 
 test('enabledDisabledDatesIsValid ignores granularity', () => {
@@ -110,7 +98,7 @@ test('isInDisabledDates', () => {
   store.options.restrictions.disabledDates = [
     targetDate.clone.manipulate(1, Unit.date),
   ];
-  expect(method(Unit.date, targetDate)).toBe(false);
+  expect(method(targetDate)).toBe(false);
 });
 
 test('isInEnabledDates', () => {
@@ -131,7 +119,7 @@ test('isInEnabledDates', () => {
   store.options.restrictions.enabledDates = [
     targetDate.clone.manipulate(1, Unit.date),
   ];
-  expect(method(Unit.date, targetDate)).toBe(false);
+  expect(method(targetDate)).toBe(false);
 });
 
 test('minMaxIsValid', () => {
@@ -158,77 +146,6 @@ test('minMaxIsValid', () => {
   expect(method(Unit.date, targetDate.clone.manipulate(2, Unit.date))).toBe(
     false
   );
-});
-
-test('enabledDisabledHoursIsValid', () => {
-  let targetDate = new DateTime();
-  // @ts-ignore
-  const method = validation._enabledDisabledHoursIsValid.bind(validation);
-
-  //no rules
-  expect(method(Unit.date, targetDate)).toBe(true);
-
-  //target date's hour
-  store.options.restrictions.disabledHours = [targetDate.hours];
-  expect(method(targetDate)).toBe(false);
-
-  //target date is not one of the disabled dates
-  store.options.restrictions.disabledHours = [
-    targetDate.clone.manipulate(1, Unit.hours).hours,
-  ];
-  expect(method(targetDate)).toBe(true);
-
-  //target date is one of the enabledDates
-  store.options.restrictions.enabledHours = [targetDate.hours];
-  expect(method(targetDate)).toBe(true);
-
-  //target date is not one of the enabledDates
-  store.options.restrictions.enabledHours = [
-    targetDate.clone.manipulate(1, Unit.hours).hours,
-  ];
-  expect(method(targetDate)).toBe(false);
-});
-
-test('isInDisabledHours', () => {
-  let targetDate = new DateTime();
-
-  // @ts-ignore
-  const method = validation._isInDisabledHours.bind(validation);
-
-  //no rules
-  store.options.restrictions.disabledHours = [];
-  expect(method(targetDate)).toBe(false);
-
-  //target date's hour is in the array
-  store.options.restrictions.disabledHours = [targetDate.hours];
-  expect(method(targetDate)).toBe(true);
-
-  //target date's hour is not in the array
-  store.options.restrictions.disabledHours = [
-    targetDate.clone.manipulate(1, Unit.hours).hours,
-  ];
-  expect(method(Unit.date, targetDate)).toBe(false);
-});
-
-test('isInEnabledHours', () => {
-  let targetDate = new DateTime();
-
-  // @ts-ignore
-  const method = validation._isInEnabledHours.bind(validation);
-
-  //no rules
-  store.options.restrictions.enabledHours = [];
-  expect(method(targetDate)).toBe(true);
-
-  //target date's hour is in the array
-  store.options.restrictions.enabledHours = [targetDate.hours];
-  expect(method(targetDate)).toBe(true);
-
-  //target date's hour is in the array
-  store.options.restrictions.enabledHours = [
-    targetDate.clone.manipulate(1, Unit.hours).hours,
-  ];
-  expect(method(Unit.date, targetDate)).toBe(false);
 });
 
 test('dateRangeIsValid', () => {

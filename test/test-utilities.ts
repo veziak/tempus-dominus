@@ -1,5 +1,5 @@
 import { expect, vi } from 'vitest';
-import { DateTime, Unit } from '../src/js/datetime';
+import { DateTime } from '../src/js/datetime';
 import { OptionsStore } from '../src/js/utilities/optionsStore';
 import DefaultFormatLocalization from '../src/js/utilities/default-format-localization';
 import {
@@ -30,7 +30,11 @@ const vanillaDate = () => new Date(2023, 3 - 1, 14, 13, 25, 42, 500);
  */
 const secondaryDate = () => new DateTime(2023, 7 - 1, 8, 3, 0);
 
-const newDateMinute = () => newDate().startOf(Unit.minutes);
+const newDateMinute = () => {
+  const d = newDate().clone;
+  d.setSeconds(0, 0);
+  return d;
+};
 /** String for default localization format (date-only). */
 const newDateStringDate = newDateMinute().format('L');
 /** String when explicitly formatting with time token. */

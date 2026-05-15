@@ -17,9 +17,6 @@ type parsedTime = {
 };
 
 export enum Unit {
-  seconds = 'seconds',
-  minutes = 'minutes',
-  hours = 'hours',
   date = 'date',
   month = 'month',
   year = 'year',
@@ -222,15 +219,6 @@ export class DateTime extends Date {
     if (this[unit] === undefined)
       throw new Error(`Unit '${unit}' is not valid`);
     switch (unit) {
-      case 'seconds':
-        this.setMilliseconds(0);
-        break;
-      case 'minutes':
-        this.setSeconds(0, 0);
-        break;
-      case 'hours':
-        this.setMinutes(0, 0, 0);
-        break;
       case 'date':
         this.setHours(0, 0, 0, 0);
         break;
@@ -264,15 +252,6 @@ export class DateTime extends Date {
     if (this[unit] === undefined)
       throw new Error(`Unit '${unit}' is not valid`);
     switch (unit) {
-      case 'seconds':
-        this.setMilliseconds(999);
-        break;
-      case 'minutes':
-        this.setSeconds(59, 999);
-        break;
-      case 'hours':
-        this.setMinutes(59, 59, 999);
-        break;
       case 'date':
         this.setHours(23, 59, 59, 999);
         break;
@@ -986,26 +965,14 @@ export class DateTime extends Date {
     const formatString = this.replaceTokens(
       //try template first
       template ||
-        //otherwise try localization format
+        //otherwise localization format; if unset, same default as DefaultFormatLocalization.format ('L')
         this.localization.format ||
-        //otherwise try date + time
-        `${DefaultFormatLocalization.dateFormats.L}, ${DefaultFormatLocalization.dateFormats.LT}`,
+        'L',
       this.localization.dateFormats
     );
 
     const formatter = (template) =>
       new Intl.DateTimeFormat(this.localization.locale, template).format(this);
-
-    if (!this.localization.hourCycle)
-      this.localization.hourCycle = guessHourCycle(this.localization.locale);
-
-    //if the format asks for a twenty-four-hour string but the hour cycle is not, then make a base guess
-    const HHCycle = this.localization.hourCycle.startsWith('h1')
-      ? 'h24'
-      : this.localization.hourCycle;
-    const hhCycle = this.localization.hourCycle.startsWith('h2')
-      ? 'h12'
-      : this.localization.hourCycle;
 
     const matches = {
       y: this.year,
@@ -1020,9 +987,9 @@ export class DateTime extends Date {
       ddd: formatter({ weekday: 'short' }),
       dddd: formatter({ weekday: 'long' }),
       H: this.getHours(),
-      HH: this.getHoursFormatted(HHCycle),
-      h: this.hours > 12 ? this.hours - 12 : this.hours,
-      hh: this.getHoursFormatted(hhCycle),
+      HH: String(this.getHours()).padStart(2, '0'),
+      h: this.hours % 12 || 12,
+      hh: String(this.hours % 12 || 12).padStart(2, '0'),
       t: this.meridiem(),
       T: this.meridiem().toUpperCase(),
       m: this.minutes,

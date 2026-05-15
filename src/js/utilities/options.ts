@@ -26,7 +26,6 @@ export default interface Options {
       down?: string;
       next?: string;
       previous?: string;
-      time?: string;
       today?: string;
       type?: 'icons' | 'sprites';
       up?: string;
@@ -43,17 +42,13 @@ export default interface Options {
   meta?: Record<string, unknown>;
   multipleDates?: boolean;
   multipleDatesSeparator?: string;
-  promptTimeOnDateChange?: boolean;
-  promptTimeOnDateChangeTransitionDelay?: number;
   restrictions?: {
     minDate?: DateTime;
     maxDate?: DateTime;
     enabledDates?: DateTime[];
     disabledDates?: DateTime[];
-    disabledTimeIntervals?: { from: DateTime; to: DateTime }[];
     daysOfWeekDisabled?: number[];
   };
-  stepping?: number;
   useCurrent?: boolean;
   viewDate?: DateTime;
 }
@@ -68,7 +63,6 @@ export interface FormatLocalization {
     LTS?: string;
   };
   format?: string;
-  hourCycle?: Intl.LocaleHourCycleKey;
   locale?: string;
   ordinal?: (n: number) => any; //eslint-disable-line @typescript-eslint/no-explicit-any
 }
@@ -77,20 +71,11 @@ export interface Localization extends FormatLocalization {
   clear?: string;
   close?: string;
   dayViewHeaderFormat?: DateTimeFormatOptions;
-  decrementHour?: string;
-  decrementMinute?: string;
-  decrementSecond?: string;
-  incrementHour?: string;
-  incrementMinute?: string;
-  incrementSecond?: string;
   maxWeekdayLength?: number;
   nextCentury?: string;
   nextDecade?: string;
   nextMonth?: string;
   nextYear?: string;
-  pickHour?: string;
-  pickMinute?: string;
-  pickSecond?: string;
   previousCentury?: string;
   previousDecade?: string;
   previousMonth?: string;
@@ -98,7 +83,6 @@ export interface Localization extends FormatLocalization {
   selectDate?: string;
   selectDecade?: string;
   selectMonth?: string;
-  selectTime?: string;
   selectYear?: string;
   startOfTheWeek?: number;
   today?: string;

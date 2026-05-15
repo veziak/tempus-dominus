@@ -218,7 +218,7 @@ test('updateInput', () => {
 
   //test input
   dates.updateInput(newDate());
-  expect(store.input.value).toBe('03/14/2023');
+  expect(store.input.value).toBe('14/03/2023');
   expect(formatInputSpy).toHaveBeenCalled();
 
   //test multipleDates
@@ -227,7 +227,7 @@ test('updateInput', () => {
   dates.add(newDate());
 
   dates.updateInput();
-  expect(store.input.value).toBe('03/14/2023; 03/14/2023');
+  expect(store.input.value).toBe('14/03/2023; 14/03/2023');
   expect(formatInputSpy).toHaveBeenCalled();
 });
 
@@ -255,15 +255,13 @@ test('setValue', () => {
   isValidSpy.mockImplementationOnce(() => true);
   dateRangeIsValidSpy.mockImplementationOnce(() => true);
 
-  store.options.stepping = 5;
   dates.setValue(newDate());
   expect(isValidSpy).toHaveBeenCalled();
   expect(dateRangeIsValidSpy).toHaveBeenCalled();
-  expect(dates.picked).toEqual([newDate().startOf(Unit.minutes)]);
+  expect(dates.picked).toEqual([newDate()]);
   expect(updateViewDateSpy).toHaveBeenCalled();
   expect(triggerEventSpy).toHaveBeenCalled();
   expect(store.unset).toBe(false);
-  store.options.stepping = 1;
 
   //test keep invalid
   store.options.keepInvalid = true;

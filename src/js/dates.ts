@@ -253,14 +253,6 @@ export default class Dates {
     index = index || 0;
     target = target.clone;
 
-    // minute stepping is being used, force the minute to the closest value
-    if (this.optionsStore.options.stepping !== 1) {
-      target.minutes =
-        Math.round(target.minutes / this.optionsStore.options.stepping) *
-        this.optionsStore.options.stepping;
-      target.startOf(Unit.minutes);
-    }
-
     const onUpdate = (isValid: boolean) => {
       this._dates[index] = target;
       this._eventEmitters.updateViewDate.emit(target.clone);

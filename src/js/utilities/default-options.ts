@@ -8,7 +8,6 @@ const defaultEnLocalization: Localization = {
   dateFormats: DefaultFormatLocalization.dateFormats,
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },
   format: DefaultFormatLocalization.format,
-  hourCycle: DefaultFormatLocalization.hourCycle,
   locale: DefaultFormatLocalization.locale,
   maxWeekdayLength: 0,
   nextCentury: 'Next Century',
@@ -75,8 +74,6 @@ const DefaultOptions: Options = {
   meta: {},
   multipleDates: false,
   multipleDatesSeparator: '; ',
-  promptTimeOnDateChange: false,
-  promptTimeOnDateChangeTransitionDelay: 200,
   restrictions: {
     minDate: undefined,
     maxDate: undefined,
@@ -84,7 +81,6 @@ const DefaultOptions: Options = {
     enabledDates: [],
     daysOfWeekDisabled: [],
   },
-  stepping: 1,
   useCurrent: true,
   viewDate: new DateTime(),
 };

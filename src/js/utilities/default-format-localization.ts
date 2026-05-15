@@ -4,14 +4,13 @@ const DefaultFormatLocalization: FormatLocalization = {
   dateFormats: {
     LTS: 'h:mm:ss T',
     LT: 'h:mm T',
-    L: 'MM/dd/yyyy',
+    L: 'dd/MM/yyyy',
     LL: 'MMMM d, yyyy',
     LLL: 'MMMM d, yyyy h:mm T',
     LLLL: 'dddd, MMMM d, yyyy h:mm T',
   },
   format: 'L',
   locale: 'default',
-  hourCycle: undefined,
   ordinal: (n) => {
     const s = ['th', 'st', 'nd', 'rd'];
     const v = n % 100;

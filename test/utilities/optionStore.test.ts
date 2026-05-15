@@ -34,11 +34,3 @@ test('viewDate', () => {
   expect(optionStore.viewDate).toEqual(secondaryDate());
   expect(optionStore.options.viewDate).toEqual(secondaryDate());
 });
-
-test('isTwelveHour', () => {
-  optionStore.options = { localization: { hourCycle: 'h12' } };
-  expect(optionStore.isTwelveHour).toBe(true);
-
-  optionStore.options = { localization: { hourCycle: 'h23' } };
-  expect(optionStore.isTwelveHour).toBe(false);
-});

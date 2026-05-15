@@ -72,7 +72,7 @@ test('Can create with string', () => {
   expect(() => DateTime.fromString('12/31/2022', null)).toThrow(/TD/);
   const localization = defaultLocalization();
   localization.format = localization.dateFormats.L;
-  const dt = DateTime.fromString('12/31/2022', localization);
+  const dt = DateTime.fromString('31/12/2022', localization);
   expect(dt.month).toBe(12 - 1); //minus 1 because javascript 🙄
   expect(dt.date).toBe(31);
   expect(dt.year).toBe(2022);
@@ -84,29 +84,21 @@ test('Can create clone', () => {
 
   expect(dt.valueOf()).toBe(d.valueOf());
 });
-new Date();
 test('startOf', () => {
   let dt = new DateTime(2022, 11, 14, 13, 42, 59, 500);
-
-  //12/31/2022 13:42:59:0
-  dt = dt.startOf(Unit.seconds);
-  expect(dt.getMilliseconds()).toBe(0);
-
-  dt = dt.startOf(Unit.minutes);
-  expect(dt.valueOf()).toBe(new Date(2022, 11, 14, 13, 42, 0).valueOf());
-
-  dt = dt.startOf(Unit.hours);
-  expect(dt.valueOf()).toBe(new Date(2022, 11, 14, 13, 0, 0).valueOf());
 
   dt = dt.startOf(Unit.date);
   expect(dt.valueOf()).toBe(new Date(2022, 11, 14, 0, 0, 0).valueOf());
 
+  dt = new DateTime(2022, 11, 14, 13, 42, 59, 500);
   dt = dt.startOf('weekDay');
   expect(dt.valueOf()).toBe(new Date(2022, 11, 11, 0, 0, 0).valueOf());
 
+  dt = new DateTime(2022, 11, 14, 13, 42, 59, 500);
   dt = dt.startOf(Unit.month);
   expect(dt.valueOf()).toBe(new Date(2022, 11, 1, 0, 0, 0).valueOf());
 
+  dt = new DateTime(2022, 11, 14, 13, 42, 59, 500);
   dt = dt.startOf(Unit.year);
   expect(dt.valueOf()).toBe(new DateTime(2022, 0, 1, 0, 0, 0).valueOf());
 
@@ -127,25 +119,18 @@ test('startOf', () => {
 test('endOf', () => {
   let dt = new DateTime(2022, 11, 14, 13, 42, 59, 50);
 
-  //12/31/2022 13:42:59:0
-  dt = dt.endOf(Unit.seconds);
-  expect(dt.getMilliseconds()).toBe(999);
-
-  dt = dt.endOf(Unit.minutes);
-  expect(dt.valueOf()).toBe(new Date(2022, 11, 14, 13, 42, 59, 999).valueOf());
-
-  dt = dt.endOf(Unit.hours);
-  expect(dt.valueOf()).toBe(new Date(2022, 11, 14, 13, 59, 59, 999).valueOf());
-
   dt = dt.endOf(Unit.date);
   expect(dt.valueOf()).toBe(new Date(2022, 11, 14, 23, 59, 59, 999).valueOf());
 
+  dt = new DateTime(2022, 11, 14, 13, 42, 59, 50);
   dt = dt.endOf('weekDay');
   expect(dt.valueOf()).toBe(new Date(2022, 11, 17, 23, 59, 59, 999).valueOf());
 
+  dt = new DateTime(2022, 11, 14, 13, 42, 59, 50);
   dt = dt.endOf(Unit.month);
   expect(dt.valueOf()).toBe(new Date(2022, 11, 31, 23, 59, 59, 999).valueOf());
 
+  dt = new DateTime(2022, 11, 14, 13, 42, 59, 50);
   dt = dt.endOf(Unit.year);
   expect(dt.valueOf()).toBe(new Date(2022, 11, 31, 23, 59, 59, 999).valueOf());
 
@@ -393,7 +378,7 @@ test('replace tokens', () => {
   );
 
   expect(replaceTokens('LLLLL', defaultLocalization().dateFormats)).toBe(
-    `dddd, MMMM d, yyyy h:mm TMM/dd/yyyy`
+    `dddd, MMMM d, yyyy h:mm Tdd/MM/yyyy`
   );
 });
 
@@ -619,9 +604,6 @@ test('correctHours', () => {
 
 test('format', () => {
   const dateTime = newDate();
-
-  dateTime.localization.hourCycle = 'h11';
-
   expect(dateTime.format()).toBe(newDateStringDate);
 
   expect(dateTime.format('L LT')).toBe(newDateStringMinute);
@@ -661,15 +643,7 @@ test('format', () => {
   //test no format for defaults
   const dt2 = newDate();
   dt2.localization.format = undefined;
-  dt2.localization.hourCycle = undefined;
-  expect(dt2.format()).toBe('03/14/2023, 1:25 PM');
-
-  //test hour cycles
-  const dt3 = newDate();
-  dt3.localization.hourCycle = 'h23';
-  expect(dt3.format('HH')).toBe('13');
-  dt3.localization.hourCycle = 'h11';
-  expect(dt3.format('hh')).toBe('01');
+  expect(dt2.format()).toBe('14/03/2023');
 });
 
 test('isValid', () => {

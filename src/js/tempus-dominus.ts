@@ -35,7 +35,6 @@ class TempusDominus {
   _subscribers: { [key: string]: ((event: any) => Record<string, unknown>)[] } =
     {};
   private _isDisabled = false;
-  private _currentPromptTimeTimeout: NodeJS.Timeout;
   private actions: Actions;
   private optionsStore: OptionsStore;
   private _eventEmitters: EventEmitters;
@@ -504,7 +503,6 @@ class TempusDominus {
   private _handleAfterChangeEvent(e: ChangeEvent) {
     if (
       // options is disabled
-      !this.optionsStore.options.promptTimeOnDateChange ||
       this.optionsStore.options.multipleDates ||
       this.optionsStore.options.display.inline ||
       this.optionsStore.options.display.sideBySide ||
@@ -526,20 +524,6 @@ class TempusDominus {
     ) {
       return;
     }
-
-    clearTimeout(this._currentPromptTimeTimeout);
-    this._currentPromptTimeTimeout = setTimeout(() => {
-      if (this.display.widget) {
-        this._eventEmitters.action.emit({
-          e: {
-            currentTarget: this.display.widget.querySelector(
-              '[data-action="togglePicker"]'
-            ),
-          },
-          action: ActionTypes.togglePicker,
-        });
-      }
-    }, this.optionsStore.options.promptTimeOnDateChangeTransitionDelay);
   }
 
   /**

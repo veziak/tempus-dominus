@@ -41,8 +41,4 @@ export class OptionsStore {
 
   minimumCalendarViewMode = 0;
   currentView: keyof ViewMode = 'calendar';
-
-  get isTwelveHour() {
-    return ['h12', 'h11'].includes(this.options.localization.hourCycle);
-  }
 }

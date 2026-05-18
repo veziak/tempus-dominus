@@ -15,7 +15,6 @@ const localization = {
   nextDecade: 'Sledeća dekada',
   previousCentury: 'Prethodni vek',
   nextCentury: 'Sledeći vek',
-  pickHour: 'Izaberi vreme',
   selectDate: 'Izaberi datum',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },
   locale: 'sr-Latn',

@@ -15,7 +15,6 @@ const localization = {
   nextDecade: 'Следующее десятилетие',
   previousCentury: 'Предыдущий век',
   nextCentury: 'Следующий век',
-  pickHour: 'Выберите час',
   selectDate: 'Выбрать дату',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },
   locale: 'ru',

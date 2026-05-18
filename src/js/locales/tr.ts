@@ -15,7 +15,6 @@ const localization = {
   nextDecade: 'Sonraki on yıl',
   previousCentury: 'Önceki yüzyıl',
   nextCentury: 'Sonraki yüzyıl',
-  pickHour: 'Saat seçin',
   selectDate: 'Tarih seçin',
   dayViewHeaderFormat: { month: 'long', year: 'numeric' },
   locale: 'tr',

@@ -15,7 +15,6 @@ const localization = {
   nextDecade: 'Následující desetiletí',
   previousCentury: 'Předchozí století',
   nextCentury: 'Následující století',
-  pickHour: 'Vybrat hodinu',
   selectDate: 'Vybrat datum',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },
   locale: 'cs',

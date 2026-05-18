@@ -15,7 +15,6 @@ const localization = {
   nextDecade: 'العقد التالي',
   previousCentury: 'القرن السابق',
   nextCentury: 'القرن التالي',
-  pickHour: 'اختر الساعة',
   selectDate: 'اختر التاريخ',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },
   locale: 'ar-SA',

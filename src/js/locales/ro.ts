@@ -15,7 +15,6 @@ const localization = {
   nextDecade: 'Deceniul următor',
   previousCentury: 'Secolul precedent',
   nextCentury: 'Secolul următor',
-  pickHour: 'Alege ora',
   selectDate: 'Selectează data',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },
   locale: 'ro',

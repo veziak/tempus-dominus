@@ -15,7 +15,6 @@ const localization = {
   nextDecade: 'Seuraava vuosikymmen',
   previousCentury: 'Edellinen vuosisata',
   nextCentury: 'Seuraava vuosisata',
-  pickHour: 'Valitse tunnit',
   selectDate: 'Valise päivä',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },
   locale: 'fi',

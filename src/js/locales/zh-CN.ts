@@ -15,7 +15,6 @@ const localization = {
   nextDecade: '上个年代',
   previousCentury: '上个世纪',
   nextCentury: '下个世纪',
-  pickHour: '选取时钟',
   selectDate: '选择日期',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },
   locale: 'zh-CN',

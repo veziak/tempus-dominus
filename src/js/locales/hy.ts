@@ -15,7 +15,6 @@ const localization = {
   nextDecade: 'Հաջորդ տասնամյակ',
   previousCentury: 'Նախորդ դար',
   nextCentury: 'Հաջորդ դար',
-  pickHour: 'Ընտրել ժամ',
   selectDate: 'Ընտրել ամսաթիվ',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },
   locale: 'hy',

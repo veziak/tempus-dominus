@@ -15,7 +15,6 @@ const localization = {
   nextDecade: 'Próxima década',
   previousCentury: 'Século anterior',
   nextCentury: 'Próximo Século',
-  pickHour: 'Seleccionar hora',
   selectDate: 'Seleccionar data',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },
   startOfTheWeek: 1,

@@ -1,12 +1,7 @@
 import Display from './display/index';
 import Dates from './dates';
 import Actions from './actions';
-import {
-  DateTime,
-  DateTimeFormatOptions,
-  guessHourCycle,
-  Unit,
-} from './datetime';
+import { DateTime, DateTimeFormatOptions, Unit } from './datetime';
 import Namespace from './utilities/namespace';
 import Options from './utilities/options';
 import {

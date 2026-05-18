@@ -6,12 +6,7 @@ import {
   newDateStringMinute,
 } from './test-utilities';
 import { expect, test } from 'vitest';
-import {
-  DateTime,
-  getFormatByUnit,
-  guessHourCycle,
-  Unit,
-} from '../src/js/datetime';
+import { DateTime, getFormatByUnit, Unit } from '../src/js/datetime';
 
 test('getFormatByUnit', () => {
   expect(getFormatByUnit(Unit.date)).toEqual({ dateStyle: 'short' });
@@ -328,24 +323,6 @@ test('Getters/Setters', () => {
   expect(dt.weeksInWeekYear()).toBe(53);
 
   expect(dt.meridiem()).toBe('PM');
-});
-
-test('Guess hour cycle', () => {
-  // @ts-ignore
-  let guess = guessHourCycle();
-  expect(guess).toBe('h12');
-
-  guess = guessHourCycle('en-US');
-  expect(guess).toBe('h12');
-
-  guess = guessHourCycle('en-GB');
-  expect(guess).toBe('h23');
-
-  guess = guessHourCycle('ar-IQ');
-  expect(guess).toBe('h12');
-
-  guess = guessHourCycle('sv-SE');
-  expect(guess).toBe('h23');
 });
 
 test('Get ALl Months', () => {

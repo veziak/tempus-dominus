@@ -24,7 +24,6 @@ const localization = {
   pickSecond: 'Saniye seç',
   incrementSecond: 'Saniyeyi ilerlet',
   decrementSecond: 'Saniyeyi gerilet',
-  toggleMeridiem: 'Meridemi Değiştir AM-PM',
   selectTime: 'Saat seçin',
   selectDate: 'Tarih seçin',
   dayViewHeaderFormat: { month: 'long', year: 'numeric' },

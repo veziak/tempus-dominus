@@ -86,6 +86,5 @@ export interface Localization extends FormatLocalization {
   selectYear?: string;
   startOfTheWeek?: number;
   today?: string;
-  toggleMeridiem?: string;
   toggleAriaLabel?: string;
 }

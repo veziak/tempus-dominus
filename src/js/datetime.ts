@@ -2,19 +2,14 @@ import { FormatLocalization } from './utilities/options';
 import Namespace from './utilities/namespace';
 import DefaultFormatLocalization from './utilities/default-format-localization';
 
-type parsedTime = {
-  afternoon?: boolean;
+interface FormatParseFields {
   year?: number;
   month?: number;
   day?: number;
-  hours?: number;
-  minutes?: number;
-  seconds?: number;
-  milliseconds?: number;
   zone?: {
     offset: number;
   };
-};
+}
 
 export enum Unit {
   date = 'date',
@@ -56,27 +51,16 @@ export const getFormatByUnit = (unit: Unit): object => {
 };
 
 interface FormatMatch {
-  parser: (obj: parsedTime, input: number) => void;
+  parser: (obj: FormatParseFields, input: number) => void;
   pattern?: RegExp;
 }
 
 interface FormatMatchString {
-  parser: (obj: parsedTime, input: string) => void;
+  parser: (obj: FormatParseFields, input: string) => void;
   pattern?: RegExp;
 }
 
 interface FormatExpression {
-  t: FormatMatchString;
-  T: FormatMatchString;
-  fff: FormatMatch;
-  s: FormatMatch;
-  ss: FormatMatch;
-  m: FormatMatch;
-  mm: FormatMatch;
-  H: FormatMatch;
-  h: FormatMatch;
-  HH: FormatMatch;
-  hh: FormatMatch;
   d: FormatMatch;
   dd: FormatMatch;
   Do: FormatMatchString;
@@ -668,71 +652,7 @@ export class DateTime extends Date {
     };
   }
 
-  private getLocaleAfternoon(): string {
-    return new Intl.DateTimeFormat(this.localization.locale, {
-      hour: 'numeric',
-      hour12: true,
-    })
-      .formatToParts(new Date(2022, 3, 4, 13))
-      .find((p) => p.type === 'dayPeriod')
-      ?.value?.replace(/\s+/g, ' ');
-  }
-
-  private meridiemMatch(input: string) {
-    return input.toLowerCase() === this.getLocaleAfternoon().toLowerCase();
-  }
-
   private expressions: FormatExpression = {
-    t: {
-      pattern: undefined, //this.matchWord,
-      parser: (obj, input) => {
-        obj.afternoon = this.meridiemMatch(input);
-      },
-    },
-    T: {
-      pattern: undefined, //this.matchWord,
-      parser: (obj, input) => {
-        obj.afternoon = this.meridiemMatch(input);
-      },
-    },
-    fff: {
-      pattern: this.match3,
-      parser: (obj, input) => {
-        obj.milliseconds = +input;
-      },
-    },
-    s: {
-      pattern: this.match1to2,
-      parser: this.addInput('seconds'),
-    },
-    ss: {
-      pattern: this.match1to2,
-      parser: this.addInput('seconds'),
-    },
-    m: {
-      pattern: this.match1to2,
-      parser: this.addInput('minutes'),
-    },
-    mm: {
-      pattern: this.match1to2,
-      parser: this.addInput('minutes'),
-    },
-    H: {
-      pattern: this.match1to2,
-      parser: this.addInput('hours'),
-    },
-    h: {
-      pattern: this.match1to2,
-      parser: this.addInput('hours'),
-    },
-    HH: {
-      pattern: this.match1to2,
-      parser: this.addInput('hours'),
-    },
-    hh: {
-      pattern: this.match1to2,
-      parser: this.addInput('hours'),
-    },
     d: {
       pattern: this.match1to2,
       parser: this.addInput('day'),
@@ -804,21 +724,6 @@ export class DateTime extends Date {
     // zzz: this.zoneExpressions
   };
 
-  private correctHours(time) {
-    const { afternoon } = time;
-    if (afternoon !== undefined) {
-      const { hours } = time;
-      if (afternoon) {
-        if (hours < 12) {
-          time.hours += 12;
-        }
-      } else if (hours === 12) {
-        time.hours = 0;
-      }
-      delete time.afternoon;
-    }
-  }
-
   private makeParser(format: string) {
     format = this.replaceTokens(format, this.localization.dateFormats);
     const matchArray = format.match(this.formattingTokens);
@@ -834,13 +739,8 @@ export class DateTime extends Date {
       }
     }
 
-    return (input: string): parsedTime => {
-      const time = {
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-        milliseconds: 0,
-      };
+    return (input: string): FormatParseFields => {
+      const fields: FormatParseFields = {};
       for (let i = 0, start = 0; i < length; i += 1) {
         const token = expressionArray[i];
         if (typeof token === 'string') {
@@ -853,12 +753,11 @@ export class DateTime extends Date {
             const match = token.pattern.exec(part);
             value = match[0];
           }
-          token.parser.call(this, time, value);
+          token.parser.call(this, fields, value);
           input = input.replace(value, '');
         }
       }
-      this.correctHours(time);
-      return time;
+      return fields;
     };
   }
 
@@ -880,8 +779,7 @@ export class DateTime extends Date {
 
       input = input.replace(/\s+/g, ' ');
       const parser = dt.makeParser(localization.format);
-      const { year, month, day, hours, minutes, seconds, milliseconds, zone } =
-        parser(input);
+      const { year, month, day, zone } = parser(input);
       const d = day || (!year && !month ? dt.getDate() : 1);
       const y = year || dt.getFullYear();
       let M = 0;
@@ -890,18 +788,10 @@ export class DateTime extends Date {
       }
       if (zone) {
         return new DateTime(
-          Date.UTC(
-            y,
-            M,
-            d,
-            hours,
-            minutes,
-            seconds,
-            milliseconds + zone.offset * 60 * 1000
-          )
+          Date.UTC(y, M, d, 0, 0, 0, zone.offset * 60 * 1000)
         );
       }
-      return new DateTime(y, M, d, hours, minutes, seconds, milliseconds);
+      return new DateTime(y, M, d);
     } catch (e) {
       Namespace.errorMessages.customDateFormatError(
         `Unable to parse provided input: ${input}, format: ${localization.format}`

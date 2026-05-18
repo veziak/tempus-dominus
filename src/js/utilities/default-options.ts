@@ -25,7 +25,6 @@ const defaultEnLocalization: Localization = {
   selectYear: 'Select Year',
   startOfTheWeek: 0,
   today: 'Go to today',
-  toggleMeridiem: 'Toggle Meridiem',
   toggleAriaLabel: 'Change date',
 };
 

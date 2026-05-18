@@ -24,7 +24,6 @@ const localization = {
   pickSecond: 'Odaberi sekundu',
   incrementSecond: 'Povećaj sekunde',
   decrementSecond: 'Smanji sekunde',
-  toggleMeridiem: 'Razmijeni AM-PM',
   selectTime: 'Odaberi vrijeme',
   selectDate: 'Odaberi datum',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },

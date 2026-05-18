@@ -6,7 +6,6 @@ enum ActionTypes {
   selectYear = 'selectYear',
   selectDecade = 'selectDecade',
   selectDay = 'selectDay',
-  toggleMeridiem = 'toggleMeridiem',
   togglePicker = 'togglePicker',
   clear = 'clear',
   close = 'close',

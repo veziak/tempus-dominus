@@ -24,7 +24,6 @@ const localization = {
   pickSecond: 'Valitse sekuntit',
   incrementSecond: 'Vähennä sekunteja',
   decrementSecond: 'Lisää sekunteja',
-  toggleMeridiem: 'Vaihda kellonaikaa',
   selectTime: 'Valitse aika',
   selectDate: 'Valise päivä',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },

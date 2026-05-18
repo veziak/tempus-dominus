@@ -24,7 +24,6 @@ const localization = {
   pickSecond: 'Alege secunda',
   incrementSecond: 'Incrementează secunda',
   decrementSecond: 'Decrementează secunda',
-  toggleMeridiem: 'Comută modul AM/PM',
   selectTime: 'Selectează ora',
   selectDate: 'Selectează data',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },

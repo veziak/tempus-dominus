@@ -24,7 +24,6 @@ const localization = {
   pickSecond: 'Ընտրել երկրորդը',
   incrementSecond: 'Ավելացնել վայրկյան',
   decrementSecond: 'Նվազեցնել վայրկյան',
-  toggleMeridiem: 'Փոփոխել Ժամանակաշրջանը',
   selectTime: 'Ընտրել Ժամ',
   selectDate: 'Ընտրել ամսաթիվ',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },

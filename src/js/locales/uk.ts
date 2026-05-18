@@ -24,7 +24,6 @@ const localization = {
   pickSecond: 'Обрати другий',
   incrementSecond: 'Збільшення секунди',
   decrementSecond: 'Зменшення секунди',
-  toggleMeridiem: 'Переключити період',
   selectTime: 'Обрати час',
   selectDate: 'Обрати дату',
   dayViewHeaderFormat: { month: 'long', year: 'numeric' },

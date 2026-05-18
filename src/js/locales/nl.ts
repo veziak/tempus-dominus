@@ -24,7 +24,6 @@ const localization = {
   pickSecond: 'Kies een seconde',
   incrementSecond: 'Verhoog seconde',
   decrementSecond: 'Verlaag seconde',
-  toggleMeridiem: 'Schakel tussen AM/PM',
   selectTime: 'Selecteer een tijd',
   selectDate: 'Selecteer een datum',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },

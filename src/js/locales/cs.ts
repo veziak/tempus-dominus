@@ -24,7 +24,6 @@ const localization = {
   pickSecond: 'Vybrat sekundu',
   incrementSecond: 'Zvýšit sekundu',
   decrementSecond: 'Snížit sekundu',
-  toggleMeridiem: 'Přepnout ráno / odpoledne',
   selectTime: 'Vybrat čas',
   selectDate: 'Vybrat datum',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },

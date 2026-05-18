@@ -172,7 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
               ensurePath('localization', newOptions);
               Object.entries(value).forEach(([k, v]) => {
                 if (k.startsWith('prev')) k = k.replace('prev', 'previous');
-                if (k === 'togglePeriod') k = 'toggleMeridiem';
                 newOptions.localization[k] = v;
               });
               break;

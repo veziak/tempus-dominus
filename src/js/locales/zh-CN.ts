@@ -24,7 +24,6 @@ const localization = {
   pickSecond: '选取秒钟',
   incrementSecond: '加一秒钟',
   decrementSecond: '减一秒钟',
-  toggleMeridiem: '切换上下午',
   selectTime: '选择时间',
   selectDate: '选择日期',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },

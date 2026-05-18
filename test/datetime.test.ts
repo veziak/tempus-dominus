@@ -372,19 +372,6 @@ test('parseTwoDigitYear', () => {
   expect(parsed).toBe(2023);
 });
 
-test('meridiemMatch', () => {
-  const dateTime = newDate();
-  // @ts-ignore
-  let match = dateTime.meridiemMatch('AM');
-
-  expect(match).toBe(false);
-
-  // @ts-ignore
-  match = dateTime.meridiemMatch('PM');
-
-  expect(match).toBe(true);
-});
-
 test('expressions', () => {
   const dateTime = newDate();
   // @ts-ignore
@@ -394,8 +381,6 @@ test('expressions', () => {
   // @ts-ignore
   const match2 = dateTime.match2;
   // @ts-ignore
-  const match3 = dateTime.match3;
-  // @ts-ignore
   const match4 = dateTime.match4;
   // @ts-ignore
   const match1to2 = dateTime.match1to2;
@@ -403,79 +388,6 @@ test('expressions', () => {
   const matchSigned = dateTime.matchSigned;
 
   const o: any = {};
-
-  //#region meridiem
-  e.t.parser(o, 'AM');
-
-  expect(o.afternoon).toBe(false);
-
-  e.t.parser(o, 'pm');
-
-  expect(o.afternoon).toBe(true);
-
-  e.T.parser(o, 'AM');
-
-  expect(o.afternoon).toBe(false);
-
-  e.T.parser(o, 'pm');
-
-  expect(o.afternoon).toBe(true);
-
-  //#endregion
-
-  expect(e.fff.pattern).toBe(match3);
-
-  e.fff.parser(o, 42);
-
-  expect(o.milliseconds).toBe(42);
-
-  expect(e.s.pattern).toBe(match1to2);
-
-  e.s.parser(o, 5);
-
-  expect(o.seconds).toBe(5);
-
-  expect(e.ss.pattern).toBe(match1to2);
-
-  e.ss.parser(o, 6);
-
-  expect(o.seconds).toBe(6);
-
-  expect(e.m.pattern).toBe(match1to2);
-
-  e.m.parser(o, 7);
-
-  expect(o.minutes).toBe(7);
-
-  expect(e.mm.pattern).toBe(match1to2);
-
-  e.mm.parser(o, 10);
-
-  expect(o.minutes).toBe(10);
-
-  expect(e.h.pattern).toBe(match1to2);
-
-  e.h.parser(o, 11);
-
-  expect(o.hours).toBe(11);
-
-  expect(e.hh.pattern).toBe(match1to2);
-
-  e.hh.parser(o, 12);
-
-  expect(o.hours).toBe(12);
-
-  expect(e.HH.pattern).toBe(match1to2);
-
-  e.HH.parser(o, 13);
-
-  expect(o.hours).toBe(13);
-
-  expect(e.HH.pattern).toBe(match1to2);
-
-  e.HH.parser(o, 14);
-
-  expect(o.hours).toBe(14);
 
   expect(e.d.pattern).toBe(match1to2);
 
@@ -554,31 +466,6 @@ test('expressions', () => {
   //#endregion
 });
 
-test('correctHours', () => {
-  const dateTime = newDate();
-
-  // @ts-ignore
-  const correctHours = dateTime.correctHours;
-
-  const o = {
-    afternoon: true,
-    hours: 8,
-  };
-
-  correctHours(o);
-
-  expect(o.hours).toBe(20);
-  expect(o.afternoon).toBe(undefined);
-
-  o.hours = 12;
-  o.afternoon = false;
-
-  correctHours(o);
-
-  expect(o.hours).toBe(0);
-  expect(o.afternoon).toBe(undefined);
-});
-
 test('format', () => {
   const dateTime = newDate();
   expect(dateTime.format()).toBe(newDateStringDate);
@@ -613,8 +500,8 @@ test('format', () => {
   );
 
   //test invalid input
-  expect(() => DateTime.fromString('--', { format: 'hjik' })).toThrow(
-    'TD: Custom Date Format: Unable to parse provided input: --, format: hjik'
+  expect(() => DateTime.fromString('xx', { format: 'dd' })).toThrow(
+    /TD: Custom Date Format: Unable to parse/
   );
 
   //test no format for defaults

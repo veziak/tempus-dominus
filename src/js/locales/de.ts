@@ -24,7 +24,6 @@ const localization = {
   pickSecond: 'Sekunde wählen',
   incrementSecond: 'Sekunde erhöhen',
   decrementSecond: 'Sekunde verringern',
-  toggleMeridiem: 'Tageszeit umschalten',
   selectTime: 'Zeit wählen',
   selectDate: 'Datum wählen',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },

@@ -193,11 +193,6 @@ class Css {
    */
   separator = 'separator';
 
-  /**
-   * Applied AM/PM toggle button.
-   */
-  toggleMeridiem = 'toggleMeridiem';
-
   //#endregion
 
   //#region collapse

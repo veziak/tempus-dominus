@@ -24,7 +24,6 @@ const localization = {
   pickSecond: 'اختر الثانية',
   incrementSecond: 'أضف ثانية',
   decrementSecond: 'أنقص ثانية',
-  toggleMeridiem: 'تبديل الفترة',
   selectTime: 'اخر الوقت',
   selectDate: 'اختر التاريخ',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },

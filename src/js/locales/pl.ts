@@ -24,7 +24,6 @@ const localization = {
   pickSecond: 'Wybierz sekundę',
   incrementSecond: 'Kolejna sekunda',
   decrementSecond: 'Poprzednia sekunda',
-  toggleMeridiem: 'Przełącz porę dnia',
   selectTime: 'Ustaw godzinę',
   selectDate: 'Ustaw datę',
   dayViewHeaderFormat: { month: 'long', year: '2-digit' },

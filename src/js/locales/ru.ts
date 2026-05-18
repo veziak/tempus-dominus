@@ -20,15 +20,11 @@ const localization = {
   locale: 'ru',
   startOfTheWeek: 1,
   dateFormats: {
-    LT: 'H:mm',
-    LTS: 'H:mm:ss',
     L: 'dd.MM.yyyy',
     LL: 'd MMMM yyyy г.',
-    LLL: 'd MMMM yyyy г., H:mm',
-    LLLL: 'dddd, d MMMM yyyy г., H:mm',
   },
   ordinal: (n) => n,
-  format: 'L LT',
+  format: 'L',
 };
 
 export { localization, name };

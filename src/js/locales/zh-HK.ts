@@ -20,15 +20,11 @@ const localization = {
   locale: 'zh-HK',
   startOfTheWeek: 1,
   dateFormats: {
-    LT: 'HH:mm',
-    LTS: 'HH:mm:ss',
     L: 'yyyy/MM/dd',
     LL: 'yyyy年Md日',
-    LLL: 'yyyy年Md日 HH:mm',
-    LLLL: 'yyyy年Md日dddd HH:mm',
   },
   ordinal: (n) => n,
-  format: 'L LT',
+  format: 'L',
 };
 
 export { localization, name };

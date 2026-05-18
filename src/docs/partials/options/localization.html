@@ -48,12 +48,8 @@
       startOfTheWeek: 0,
       hourCycle: undefined,
       dateFormats: {
-        LTS: 'h:mm:ss T',
-        LT: 'h:mm T',
         L: 'MM/dd/yyyy',
-        LL: 'MMMM d, yyyy',
-        LLL: 'MMMM d, yyyy h:mm T',
-        LLLL: 'dddd, MMMM d, yyyy h:mm T'
+        LL: 'MMMM d, yyyy'
       },
       ordinal: (n) => n,
       format: 'L',
@@ -310,22 +306,6 @@
     <div class='row'>
       <div class='col offset-1 border-start'>
         <div>
-          <h4 id='dateFormatsLTS'>LTS<a class='anchor-link' aria-label='Anchor'
-                                        href='#dateFormatsLTS'><i
-            class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
-          <p>
-            Long form time format.
-          </p>
-        </div>
-        <div>
-          <h4 id='dateFormatsLT'>LT<a class='anchor-link' aria-label='Anchor'
-                                      href='#dateFormatsLT'><i
-            class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
-          <p>
-            Short time format.
-          </p>
-        </div>
-        <div>
           <h4 id='dateFormatsL'>L<a class='anchor-link' aria-label='Anchor'
                                     href='#dateFormatsL'><i
             class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
@@ -339,24 +319,6 @@
             class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
           <p>
             Long form date format. US default is July 4, 2022.
-          </p>
-        </div>
-        <div>
-          <h4 id='dateFormatsLLL'>LLL<a class='anchor-link' aria-label='Anchor'
-                                        href='#dateFormatsLLL'><i
-            class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
-          <p>
-            Long form pattern; expands per <code>dateFormats.LLL</code> (that preset still includes time segments for
-            <code>DateTime.format()</code>). The picker input shows a date-only string by default.
-          </p>
-        </div>
-        <div>
-          <h4 id='dateFormatsLLLL'>LLLL<a class='anchor-link' aria-label='Anchor'
-                                          href='#dateFormatsLLLL'><i
-            class='fa-solid fa-anchor' aria-hidden='true'></i></a></h4>
-          <p>
-            Long form pattern with weekday; expands per <code>dateFormats.LLLL</code> (includes time segments for
-            <code>DateTime.format()</code>). The picker input shows a date-only string by default.
           </p>
         </div>
       </div>
@@ -381,8 +343,7 @@
     <p>
       Default tokenized format to use for parsing and for <code>DateTime.format()</code> when you call it yourself.
       This can be <code>"L"</code> or <code>"dd/MM/yyyy"</code>, for example. The text input is formatted with a
-      date-only pattern (time tokens such as a trailing <code>LT</code> are not shown there), unless a plugin replaces
-      <code>formatInput</code>.
+      date-only pattern, unless a plugin replaces <code>formatInput</code>.
     </p>
   </div>
 
@@ -422,12 +383,8 @@
         <li><a href='#maxWeekdayLength'>Max Weekday Length</a></li>
         <li><a href='#dateFormats'>Date Formats</a>
           <ul>
-            <li><a href='#dateFormatsLTS'>LTS</a></li>
-            <li><a href='#dateFormatsLT'>LT</a></li>
             <li><a href='#dateFormatsL'>L</a></li>
             <li><a href='#dateFormatsLL'>LL</a></li>
-            <li><a href='#dateFormatsLLL'>LLL</a></li>
-            <li><a href='#dateFormatsLLLL'>LLLL</a></li>
           </ul>
         </li>
         <li><a href='#ordinal'>Ordinal</a></li>

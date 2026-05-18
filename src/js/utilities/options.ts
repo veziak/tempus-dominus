@@ -57,10 +57,6 @@ export interface FormatLocalization {
   dateFormats?: {
     L?: string;
     LL?: string;
-    LLL?: string;
-    LLLL?: string;
-    LT?: string;
-    LTS?: string;
   };
   format?: string;
   locale?: string;

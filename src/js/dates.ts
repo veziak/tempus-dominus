@@ -13,22 +13,12 @@ import { OptionsStore } from './utilities/optionsStore';
 import { OptionConverter } from './utilities/optionConverter';
 
 /**
- * Format string used in the text input: date tokens only (no LT / LTS tail).
+ * Format string used in the text input (date tokens only).
  */
 function localizationForInputField(
   loc: FormatLocalization
 ): FormatLocalization {
-  const raw = (loc.format || 'L').trim();
-  let format = raw;
-  if (raw === 'LLL' || raw === 'LLLL') {
-    format = 'LL';
-  } else {
-    const parts = raw.split(/\s+/);
-    if (parts.length >= 2 && /^(LT|LTS)$/i.test(parts[parts.length - 1])) {
-      format = parts.slice(0, -1).join(' ') || 'L';
-    }
-  }
-  return { ...loc, format };
+  return { ...loc, format: (loc.format || 'L').trim() };
 }
 
 export default class Dates {

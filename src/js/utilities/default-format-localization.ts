@@ -2,12 +2,8 @@ import { FormatLocalization } from './options';
 
 const DefaultFormatLocalization: FormatLocalization = {
   dateFormats: {
-    LTS: 'h:mm:ss T',
-    LT: 'h:mm T',
     L: 'dd/MM/yyyy',
     LL: 'MMMM d, yyyy',
-    LLL: 'MMMM d, yyyy h:mm T',
-    LLLL: 'dddd, MMMM d, yyyy h:mm T',
   },
   format: 'L',
   locale: 'default',

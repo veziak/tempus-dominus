@@ -1,7 +1,6 @@
 import {
   loadFixtures,
   newDate,
-  newDateMinute,
   newDateStringDate,
   reset,
   secondaryDate,
@@ -84,7 +83,7 @@ test('lastPicked to return last selected date', () => {
   dates.add(new DateTime());
   dates.add(newDate());
 
-  expect(dates.lastPicked.valueOf()).toBe(newDate().valueOf());
+  expect(dates.lastPicked).toEqual(newDate().clone);
   expect(dates.lastPickedIndex).toBe(1);
 });
 
@@ -104,9 +103,9 @@ test('parseInput', () => {
   expect(dates.parseInput(undefined)).toBe(null);
   expect(dateConversionSpy).toHaveBeenCalledTimes(1);
 
-  dateConversionSpy.mockImplementationOnce(() => newDateMinute());
+  dateConversionSpy.mockImplementationOnce(() => newDate());
   expect(dates.parseInput(newDateStringDate).toISOString()).toBe(
-    newDateMinute().toISOString()
+    newDate().toISOString()
   );
   expect(dateConversionSpy).toHaveBeenCalledTimes(2);
 });
@@ -124,10 +123,10 @@ test('setFromInput', () => {
   dates.clear();
 
   //test setting date from string
-  setValueSpy.mockImplementationOnce(() => dates.add(newDateMinute()));
-  parseInputSpy.mockImplementationOnce(() => newDateMinute());
+  setValueSpy.mockImplementationOnce(() => dates.add(newDate()));
+  parseInputSpy.mockImplementationOnce(() => newDate());
   dates.setFromInput(newDateStringDate);
-  expect(dates.picked).toEqual([newDateMinute()]);
+  expect(dates.picked).toEqual([newDate()]);
   expect(parseInputSpy).toHaveBeenCalledTimes(1);
   expect(setValueSpy).toHaveBeenCalledTimes(2);
 });

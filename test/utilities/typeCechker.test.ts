@@ -1,6 +1,5 @@
 import {
   newDate,
-  newDateMinute,
   vanillaDate,
   secondaryDate,
   defaultLocalization,
@@ -10,7 +9,6 @@ import {
   convertToDateTime,
   tryConvertToDateTime,
   typeCheckDateArray,
-  typeCheckNumberArray,
 } from '../../src/js/utilities/typeChecker';
 import { DateTime } from '../../src/js/datetime';
 
@@ -19,9 +17,9 @@ test('tryConvertToDateTime', () => {
   convertSpy.mockImplementation(() => newDate());
 
   const fromStringSpy = vi.spyOn(DateTime, 'fromString');
-  fromStringSpy.mockImplementationOnce(() => newDateMinute());
+  fromStringSpy.mockImplementationOnce(() => newDate());
 
-  const locTime = { ...defaultLocalization(), format: 'L LT' };
+  const locDate = { ...defaultLocalization(), format: 'L' };
 
   //null should return null
   expect(tryConvertToDateTime(null, null)).toBe(null);
@@ -34,14 +32,12 @@ test('tryConvertToDateTime', () => {
   expect(convertSpy).toHaveBeenCalled();
 
   //converting from string
-  expect(tryConvertToDateTime('03/14/2023 1:25 PM', locTime)).toEqual(
-    newDateMinute()
-  );
+  expect(tryConvertToDateTime('14/03/2023', locDate)).toEqual(newDate());
   expect(fromStringSpy).toHaveBeenCalled();
 
   // converting from an invalid string will produce an invalid date
   fromStringSpy.mockImplementationOnce((a) => new DateTime(a));
-  expect(tryConvertToDateTime('13/70/2023 1:25 PM', locTime)).toBe(null);
+  expect(tryConvertToDateTime('31/02/2023', locDate)).toBe(null);
   expect(fromStringSpy).toHaveBeenCalled();
 
   // an invalid type should return null
@@ -58,14 +54,14 @@ test('convertToDateTime', () => {
 });
 
 test('typeCheckDateArray', () => {
-  const locTime = { ...defaultLocalization(), format: 'L LT' };
+  const locDate = { ...defaultLocalization(), format: 'L' };
   //wrong data type
   expect(() => typeCheckDateArray('disabledDates', 42, '', null)).toThrow();
 
   //check each excepted type for conversion
-  const dateArray = [newDate(), vanillaDate(), secondaryDate().format('L LT')];
+  const dateArray = [newDate(), vanillaDate(), secondaryDate().format('L')];
 
-  typeCheckDateArray('disabledDates', dateArray, '', locTime);
+  typeCheckDateArray('disabledDates', dateArray, '', locDate);
 
   expect(dateArray[0]).toEqual(newDate());
   expect(dateArray[1]).toEqual(vanillaDate());
@@ -73,12 +69,4 @@ test('typeCheckDateArray', () => {
 
   //invalid type should throw
   expect(() => typeCheckDateArray('', [42], null)).toThrow();
-});
-
-test('typeCheckNumberArray', () => {
-  //invalid type should throw
-  expect(() => typeCheckNumberArray('disabledHours', null, null)).toThrow();
-
-  //array of numbers is expected
-  expect(() => typeCheckNumberArray('', [42], '')).not.toThrow();
 });

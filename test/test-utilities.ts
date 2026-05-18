@@ -19,26 +19,14 @@ vi.mock('../src/js/utilities/service-locator', () => ({
   serviceLocator: fixtureServiceLocator,
 }));
 
-/**
- * March 14th, 2023 1:25:42:500 PM
- */
-const newDate = () => new DateTime(2023, 3 - 1, 14, 13, 25, 42, 500);
-const vanillaDate = () => new Date(2023, 3 - 1, 14, 13, 25, 42, 500);
+/** March 14th, 2023 */
+const newDate = () => new DateTime(2023, 3 - 1, 14);
+const vanillaDate = () => new Date(2023, 3 - 1, 14);
 
-/**
- * July 8th, 2023 3:00 AM
- */
-const secondaryDate = () => new DateTime(2023, 7 - 1, 8, 3, 0);
+/** July 8th, 2023 */
+const secondaryDate = () => new DateTime(2023, 7 - 1, 8);
 
-const newDateMinute = () => {
-  const d = newDate().clone;
-  d.setSeconds(0, 0);
-  return d;
-};
-/** String for default localization format (date-only). */
-const newDateStringDate = newDateMinute().format('L');
-/** String when explicitly formatting with time token. */
-const newDateStringMinute = newDateMinute().format('L LT');
+const newDateStringDate = newDate().format('L');
 const newDateStringIso = newDate().toISOString();
 
 let store = fixtureServiceLocator.locate(OptionsStore);
@@ -48,11 +36,11 @@ const reset = () => {
   store.viewDate = newDate();
 };
 
-/** Calendar selections and default input values use local midnight (no time-of-day). */
+/** Calendar selections use local midnight (no time-of-day). */
 function expectDateTimeMidnightLocal(d: DateTime) {
-  expect(d.hours).toBe(0);
-  expect(d.minutes).toBe(0);
-  expect(d.seconds).toBe(0);
+  expect(d.getHours()).toBe(0);
+  expect(d.getMinutes()).toBe(0);
+  expect(d.getSeconds()).toBe(0);
   expect(d.getMilliseconds()).toBe(0);
 }
 
@@ -72,9 +60,7 @@ reset();
 
 export {
   newDate,
-  newDateMinute,
   newDateStringDate,
-  newDateStringMinute,
   newDateStringIso,
   vanillaDate,
   secondaryDate,

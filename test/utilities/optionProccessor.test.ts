@@ -1,9 +1,4 @@
-import {
-  newDate,
-  newDateMinute,
-  secondaryDate,
-  defaultLocalization,
-} from '../test-utilities';
+import { newDate, defaultLocalization } from '../test-utilities';
 import { expect, test } from 'vitest';
 import { processKey } from '../../src/js/utilities/optionProcessor';
 
@@ -78,7 +73,7 @@ test('defaultProcessor', () => {
 });
 
 test('mandatoryDate', () => {
-  const locTime = { ...defaultLocalization(), format: 'L LT' };
+  const locDate = { ...defaultLocalization(), format: 'L' };
   //invalid date should throw
   expect(() =>
     processKey({
@@ -95,17 +90,17 @@ test('mandatoryDate', () => {
   expect(
     processKey({
       key: 'defaultDate',
-      value: newDateMinute().format('L LT'),
+      value: newDate().format('L'),
       defaultType: '',
       providedType: '',
       path: '',
-      localization: locTime,
+      localization: locDate,
     })
-  ).toEqual(newDateMinute());
+  ).toEqual(newDate());
 });
 
 test('optionalDate', () => {
-  const locTime = { ...defaultLocalization(), format: 'L LT' };
+  const locDate = { ...defaultLocalization(), format: 'L' };
   //invalid date should throw
   expect(() =>
     processKey({
@@ -122,13 +117,13 @@ test('optionalDate', () => {
   expect(
     processKey({
       key: 'minDate',
-      value: newDateMinute().format('L LT'),
+      value: newDate().format('L'),
       defaultType: '',
       providedType: '',
       path: '',
-      localization: locTime,
+      localization: locDate,
     })
-  ).toEqual(newDateMinute());
+  ).toEqual(newDate());
 
   //valid date should return
   expect(
@@ -141,56 +136,6 @@ test('optionalDate', () => {
       localization: defaultLocalization(),
     })
   ).toEqual(undefined);
-});
-
-test('validHourRange', () => {
-  //invalid value should throw
-  expect(() =>
-    processKey({
-      key: 'disabledHours',
-      value: 42,
-      defaultType: '',
-      providedType: '',
-      path: '',
-      localization: defaultLocalization(),
-    })
-  ).toThrow();
-
-  //valid should return
-  expect(
-    processKey({
-      key: 'disabledHours',
-      value: [6, 5],
-      defaultType: '',
-      providedType: '',
-      path: '',
-      localization: defaultLocalization(),
-    })
-  ).toEqual([6, 5]);
-
-  //valid undefined should return empty
-  expect(
-    processKey({
-      key: 'disabledHours',
-      value: undefined,
-      defaultType: '',
-      providedType: '',
-      path: '',
-      localization: defaultLocalization(),
-    })
-  ).toEqual([]);
-
-  //invalid range should throw
-  expect(() =>
-    processKey({
-      key: 'disabledHours',
-      value: [42],
-      defaultType: '',
-      providedType: '',
-      path: '',
-      localization: defaultLocalization(),
-    })
-  ).toThrow();
 });
 
 test('validDateArray', () => {
@@ -293,69 +238,6 @@ test('numbersInRange', () => {
   ).toThrow();
 });
 
-test('disabledTimeIntervals', () => {
-  //invalid value should throw
-  expect(() =>
-    processKey({
-      key: 'disabledTimeIntervals',
-      value: 42,
-      defaultType: '',
-      providedType: '',
-      path: '',
-      localization: defaultLocalization(),
-    })
-  ).toThrow();
-
-  //valid should return
-  expect(
-    processKey({
-      key: 'disabledTimeIntervals',
-      value: [1],
-      defaultType: '',
-      providedType: '',
-      path: '',
-      localization: defaultLocalization(),
-    })
-  ).toEqual([1]);
-
-  //valid undefined should return empty
-  expect(
-    processKey({
-      key: 'disabledTimeIntervals',
-      value: undefined,
-      defaultType: '',
-      providedType: '',
-      path: '',
-      localization: defaultLocalization(),
-    })
-  ).toEqual([]);
-
-  //invalid range should throw
-  expect(() =>
-    processKey({
-      key: 'disabledTimeIntervals',
-      value: 'taco',
-      defaultType: '',
-      providedType: '',
-      path: '',
-      localization: defaultLocalization(),
-    })
-  ).toThrow();
-
-  //valid undefined should return empty
-  const range = [{ from: newDate(), to: secondaryDate() }];
-  expect(
-    processKey({
-      key: 'disabledTimeIntervals',
-      value: range,
-      defaultType: '',
-      providedType: '',
-      path: '',
-      localization: defaultLocalization(),
-    })
-  ).toEqual(range);
-});
-
 test('validKeyOption', () => {
   //invalid value should throw
   expect(() =>
@@ -456,29 +338,4 @@ test('container', () => {
       localization: defaultLocalization(),
     })
   ).toEqual(element);
-});
-
-test('useTwentyfourHour', () => {
-  //not an html element
-  expect(() =>
-    processKey({
-      key: 'useTwentyfourHour',
-      value: 'top',
-      defaultType: '',
-      providedType: '',
-      path: '',
-      localization: defaultLocalization(),
-    })
-  ).toThrow();
-
-  expect(
-    processKey({
-      key: 'useTwentyfourHour',
-      value: undefined,
-      defaultType: '',
-      providedType: 'boolean',
-      path: '',
-      localization: defaultLocalization(),
-    })
-  ).toEqual(undefined);
 });

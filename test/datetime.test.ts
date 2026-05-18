@@ -3,7 +3,6 @@ import {
   defaultLocalization,
   newDate,
   newDateStringDate,
-  newDateStringMinute,
 } from './test-utilities';
 import { expect, test } from 'vitest';
 import { DateTime, getFormatByUnit, Unit } from '../src/js/datetime';
@@ -30,15 +29,11 @@ test('Localization is stored', () => {
   const es = {
     locale: 'es',
     dateFormats: {
-      LT: 'H:mm',
-      LTS: 'H:mm:ss',
       L: 'dd/MM/yyyy',
       LL: 'd [de] MMMM [de] yyyy',
-      LLL: 'd [de] MMMM [de] yyyy H:mm',
-      LLLL: 'dddd, d [de] MMMM [de] yyyy H:mm',
     },
     ordinal: (n) => `${n}º`,
-    format: 'L LT',
+    format: 'L',
   };
   dt.setLocalization(es);
   expect(dt.localization).toEqual(es);
@@ -243,39 +238,6 @@ test('isBetween', () => {
 test('Getters/Setters', () => {
   const dt = new DateTime(2022, 11, 17, 0, 0, 0);
 
-  dt.seconds = 4;
-
-  expect(dt.seconds).toBe(4);
-  expect(dt.secondsFormatted).toBe('04');
-
-  dt.minutes = 4;
-
-  expect(dt.minutes).toBe(4);
-  expect(dt.minutesFormatted).toBe('04');
-
-  dt.hours = 4;
-
-  expect(dt.hours).toBe(4);
-  expect(dt.getHoursFormatted()).toBe('04');
-
-  dt.hours = 14;
-
-  expect(dt.hours).toBe(14);
-  expect(dt.getHoursFormatted('h24')).toBe('14');
-  expect(dt.getHoursFormatted()).toBe('02');
-
-  dt.hours = 0;
-  expect(dt.getHoursFormatted('h11')).toBe('00');
-  expect(dt.getHoursFormatted('h12')).toBe('12');
-  expect(dt.getHoursFormatted('h23')).toBe('00');
-  expect(dt.getHoursFormatted('h24')).toBe('24');
-
-  dt.hours = 23;
-  expect(dt.getHoursFormatted('h11')).toBe('11');
-  expect(dt.getHoursFormatted('h12')).toBe('11');
-  expect(dt.getHoursFormatted('h23')).toBe('23');
-  expect(dt.getHoursFormatted('h24')).toBe('23');
-
   dt.date = 4;
 
   expect(dt.date).toBe(4);
@@ -321,8 +283,6 @@ test('Getters/Setters', () => {
 
   dt.year = 2026;
   expect(dt.weeksInWeekYear()).toBe(53);
-
-  expect(dt.meridiem()).toBe('PM');
 });
 
 test('Get ALl Months', () => {
@@ -342,21 +302,6 @@ test('Get ALl Months', () => {
     'November',
     'December',
   ]);
-});
-
-test('replace tokens', () => {
-  const dateTime = newDate();
-
-  // @ts-ignore
-  const replaceTokens = dateTime.replaceTokens;
-
-  expect(replaceTokens('hi LTS', 'LTS')).toBe(
-    `hi ${defaultLocalization().dateFormats.LTS}`
-  );
-
-  expect(replaceTokens('LLLLL', defaultLocalization().dateFormats)).toBe(
-    `dddd, MMMM d, yyyy h:mm Tdd/MM/yyyy`
-  );
 });
 
 test('parseTwoDigitYear', () => {
@@ -469,14 +414,6 @@ test('expressions', () => {
 test('format', () => {
   const dateTime = newDate();
   expect(dateTime.format()).toBe(newDateStringDate);
-
-  expect(dateTime.format('L LT')).toBe(newDateStringMinute);
-
-  dateTime.hours = 10;
-
-  expect(dateTime.format('dddd, MMMM, dd yy h:mm:ss:fff')).toBe(
-    'Tuesday, March, 14 23 10:25:42:500'
-  );
 
   expect(dateTime.format('dd-MMM-yyyy')).toBe('14-Mar-2023');
 

@@ -21,13 +21,9 @@ const twoDigitTemplate = {
   month: '2-digit',
   day: '2-digit',
   year: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
 };
 
 export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
-  timeStyle?: 'short' | 'medium' | 'long';
   dateStyle?: 'short' | 'medium' | 'long' | 'full';
   numberingSystem?: string;
 }
@@ -124,11 +120,7 @@ export class DateTime extends Date {
     return new DateTime(
       date.getFullYear(),
       date.getMonth(),
-      date.getDate(),
-      date.getHours(),
-      date.getMinutes(),
-      date.getSeconds(),
-      date.getMilliseconds()
+      date.getDate()
     ).setLocalization(formatLocalization);
   }
 
@@ -136,15 +128,9 @@ export class DateTime extends Date {
    * Native date manipulations are not pure functions. This function creates a duplicate of the DateTime object.
    */
   get clone() {
-    return new DateTime(
-      this.year,
-      this.month,
-      this.date,
-      this.hours,
-      this.minutes,
-      this.seconds,
-      this.getMilliseconds()
-    ).setLocalization(this.localization);
+    return new DateTime(this.year, this.month, this.date).setLocalization(
+      this.localization
+    );
   }
 
   static isValid(d): boolean {
@@ -338,86 +324,6 @@ export class DateTime extends Date {
       .filter((x) => x.type !== 'literal')
       .forEach((x) => (parts[x.type] = x.value));
     return parts;
-  }
-
-  /**
-   * Shortcut to Date.getSeconds()
-   */
-  get seconds(): number {
-    return this.getSeconds();
-  }
-
-  /**
-   * Shortcut to Date.setSeconds()
-   */
-  set seconds(value: number) {
-    this.setSeconds(value);
-  }
-
-  /**
-   * Returns two digit hours
-   */
-  get secondsFormatted(): string {
-    return this.parts(undefined, twoDigitTemplate).second;
-  }
-
-  /**
-   * Shortcut to Date.getMinutes()
-   */
-  get minutes(): number {
-    return this.getMinutes();
-  }
-
-  /**
-   * Shortcut to Date.setMinutes()
-   */
-  set minutes(value: number) {
-    this.setMinutes(value);
-  }
-
-  /**
-   * Returns two digit minutes
-   */
-  get minutesFormatted(): string {
-    return this.parts(undefined, twoDigitTemplate).minute;
-  }
-
-  /**
-   * Shortcut to Date.getHours()
-   */
-  get hours(): number {
-    return this.getHours();
-  }
-
-  /**
-   * Shortcut to Date.setHours()
-   */
-  set hours(value: number) {
-    this.setHours(value);
-  }
-
-  /**
-   * Returns two digit hour, e.g. 01...10
-   * @param hourCycle Providing an hour cycle will change 00 to 24 depending on the given value.
-   */
-  getHoursFormatted(hourCycle: Intl.LocaleHourCycleKey = 'h12') {
-    return this.parts(undefined, { ...twoDigitTemplate, hourCycle: hourCycle })
-      .hour;
-  }
-
-  /**
-   * Get the meridiem of the date. E.g. AM or PM.
-   * If the {@link locale} provides a "dayPeriod" then this will be returned,
-   * otherwise it will return AM or PM.
-   * @param locale
-   */
-  meridiem(locale: string = this.localization.locale): string {
-    return new Intl.DateTimeFormat(locale, {
-      hour: 'numeric',
-      hour12: true,
-    })
-      .formatToParts(this)
-      .find((p) => p.type === 'dayPeriod')?.value;
   }
 
   /**
@@ -837,17 +743,6 @@ export class DateTime extends Date {
       dd: this.dateFormatted,
       ddd: formatter({ weekday: 'short' }),
       dddd: formatter({ weekday: 'long' }),
-      H: this.getHours(),
-      HH: String(this.getHours()).padStart(2, '0'),
-      h: this.hours % 12 || 12,
-      hh: String(this.hours % 12 || 12).padStart(2, '0'),
-      t: this.meridiem(),
-      T: this.meridiem().toUpperCase(),
-      m: this.minutes,
-      mm: this.minutesFormatted,
-      s: this.seconds,
-      ss: this.secondsFormatted,
-      fff: this.getMilliseconds(),
       // z: this.zoneInformation(dateTime, 'z'), //-4
       // zz: this.zoneInformation(dateTime, 'zz'), //-04
       // zzz: this.zoneInformation(dateTime, 'zzz') //-0400

@@ -280,8 +280,6 @@ class TempusDominus {
       ) {
         return;
       }
-      this._handleAfterChangeEvent(event as ChangeEvent);
-
       this.optionsStore.input?.dispatchEvent(
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         new CustomEvent('change', { detail: event as any })
@@ -487,37 +485,6 @@ class TempusDominus {
         'keydown',
         this._handleToggleKeydown.bind(this)
       );
-    }
-  }
-
-  /**
-   * If the option is enabled this will render the clock view after a date pick.
-   * @param e change event
-   * @private
-   */
-  private _handleAfterChangeEvent(e: ChangeEvent) {
-    if (
-      // options is disabled
-      this.optionsStore.options.multipleDates ||
-      this.optionsStore.options.display.inline ||
-      this.optionsStore.options.display.sideBySide ||
-      // time is disabled
-      !this.display._hasTime ||
-      // clock component is already showing
-      this.display.widget
-        ?.getElementsByClassName(Namespace.css.show)[0]
-        .classList.contains(Namespace.css.timeContainer)
-    )
-      return;
-
-    // First time ever. If useCurrent option is set to true (default), do nothing
-    // because the first date is selected automatically.
-    // or date didn't change (time did) or date changed because time did.
-    if (
-      (!e.oldDate && this.optionsStore.options.useCurrent) ||
-      (e.oldDate && e.date?.isSame(e.oldDate))
-    ) {
-      return;
     }
   }
 

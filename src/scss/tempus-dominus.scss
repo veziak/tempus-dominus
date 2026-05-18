@@ -63,10 +63,6 @@
     &.date-container {
       min-height: 315px;
     }
-
-    &.time-container {
-      min-height: 217px;
-    }
   }
 
   .td-collapse {
@@ -211,35 +207,10 @@
     grid-auto-rows: calc(calc(19rem - 2 * 4px) / 7);
   }
 
-  .time-container-hour,
-  .time-container-minute,
-  .time-container-second {
-    display: grid;
-    grid-template-areas: 'a a a a';
-    grid-auto-rows: calc(calc(19rem - 2 * 4px) / 7);
-  }
-
-  .time-container-clock {
-    display: grid;
-    grid-auto-rows: calc(calc(19rem - 2 * 4px) / 7);
-
-    & .no-highlight {
-      width: 90%;
-      height: 90%;
-      align-items: center;
-      justify-content: center;
-      display: flex;
-    }
-  }
-
   .date-container-decades,
   .date-container-years,
   .date-container-months,
-  .date-container-days,
-  .time-container-clock,
-  .time-container-hour,
-  .time-container-minute,
-  .time-container-second {
+  .date-container-days {
     div:not(.no-highlight) {
       width: 90%;
       height: 90%;
@@ -269,10 +240,6 @@
         }
       }
     }
-  }
-
-  .time-container {
-    margin-bottom: 0.5rem;
   }
 
   button {
@@ -349,11 +316,7 @@
     .date-container-decades,
     .date-container-years,
     .date-container-months,
-    .date-container-days,
-    .time-container-clock,
-    .time-container-hour,
-    .time-container-minute,
-    .time-container-second {
+    .date-container-days {
       div:not(.no-highlight) {
         &:hover {
           background: var(--td-btn-hover-bg);
@@ -438,11 +401,7 @@
     .date-container-decades,
     .date-container-years,
     .date-container-months,
-    .date-container-days,
-    .time-container-clock,
-    .time-container-hour,
-    .time-container-minute,
-    .time-container-second {
+    .date-container-days {
       div:not(.no-highlight) {
         &:hover {
           background: var(--td-dark-btn-hover-bg);

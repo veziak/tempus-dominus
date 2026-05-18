@@ -553,13 +553,6 @@ export default class Display {
   }
 
   /**
-   * Returns true if the hours, minutes, or seconds component is turned on
-   */
-  get _hasTime(): boolean {
-    return false;
-  }
-
-  /**
    * Returns true if the year, month, or date component is turned on
    */
   get _hasDate(): boolean {
@@ -569,10 +562,6 @@ export default class Display {
         this.optionsStore.options.display.components.month ||
         this.optionsStore.options.display.components.date)
     );
-  }
-
-  get _hasDateAndTime(): boolean {
-    return this._hasDate && this._hasTime;
   }
 
   /**

@@ -189,11 +189,6 @@ class Css {
   //#region time element
 
   /**
-   * The outer element for all time related elements.
-   */
-  timeContainer = 'time-container';
-
-  /**
    * Applied the separator columns between time elements, e.g. hour *:* minute *:* second
    */
   separator = 'separator';
